@@ -16,13 +16,14 @@ import java.util.Arrays;
 @Api(tags = "角色管理控制器")
 @RestController
 @RequestMapping("/admin/system/sysRole")
+@CrossOrigin
 public class SysRoleController {
     @Autowired
     private SysRoleService sysRoleService;
 
     // 查询全部记录
     @ApiOperation("角色分页查询")
-    @GetMapping("/{page}/{limit}")
+    @GetMapping("{page}/{limit}")
     public Result findAll(@PathVariable long page, @PathVariable long limit, SysRoleQueryVo sysRoleQueryVo) {
         IPage<SysRole> page1 = new Page<>(page,limit);
         page1 = this.sysRoleService.selectPage(page1,sysRoleQueryVo);
@@ -40,13 +41,26 @@ public class SysRoleController {
     }
 
     @ApiOperation("修改角色信息")
-    @PutMapping("/findRoleById")
-    public Result updateRole(@RequestBody SysRole sysRole){
-        boolean flag = this.sysRoleService.updateById(sysRole);
-        if (flag){
+    @GetMapping("/findRoleById/{id}")
+    public Result findRoleById(@PathVariable Long id){
+        SysRole sysRole = this.sysRoleService.getById(id);
+        return Result.ok(sysRole);
+    }
+
+    // 修改
+    @ApiOperation("修改角色")
+    @PostMapping("/updateRole")
+    public Result updateRole(@RequestBody SysRole sysRole)
+    {
+        boolean isSuccess = this.sysRoleService.updateById(sysRole);
+        if (isSuccess)
+        {
             return Result.ok();
         }
-        return Result.fail();
+        else
+        {
+            return Result.fail();
+        }
     }
 
     @ApiOperation("批量删除角色")

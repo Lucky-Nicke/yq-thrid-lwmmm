@@ -11,3 +11,6 @@ spring:
     password: Zjh20040301
   main:
     allow-circular-references: true
+  jackson:
+    date-format: yyyy-MM-dd HH:mm:ss
+    time-zone: GMT+8

@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.lanxige.model.system.SysUser;
 import com.lanxige.model.vo.SysUserQueryVo;
 import com.lanxige.service.ISysUserService;
+import com.lanxige.util.MD5Helper;
 import com.lanxige.util.Result;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -41,6 +42,10 @@ public class SysUserController {
     @ApiOperation("添加用户")
     @PostMapping("/addUser")
     public Result addUser(@RequestBody SysUser sysUser) {
+        //MD5加密密码
+        String passwordWithMD5 = MD5Helper.md5(sysUser.getPassword());
+        sysUser.setPassword(passwordWithMD5);
+
         boolean b = this.sysUserService.save(sysUser);
         if (b) {
             return Result.ok();

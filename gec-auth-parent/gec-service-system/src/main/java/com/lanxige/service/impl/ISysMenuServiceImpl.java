@@ -7,8 +7,10 @@ import com.lanxige.mapper.SysRoleMenuMapper;
 import com.lanxige.model.system.SysMenu;
 import com.lanxige.model.system.SysRoleMenu;
 import com.lanxige.model.vo.AssginMenuVo;
+import com.lanxige.model.vo.RouterVo;
 import com.lanxige.service.ISysMenuService;
-import com.lanxige.util.MenuHelper;
+import com.lanxige.utils.MenuHelper;
+import com.lanxige.utils.RouterHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -79,5 +81,26 @@ public class ISysMenuServiceImpl extends ServiceImpl<SysMenuMapper, SysMenu> imp
                 sysRoleMenuMapper.insert(sysRoleMenu);
             }
         }
+    }
+
+    @Override
+    public List<RouterVo> findUserMenuList(Long userId) {
+        List<SysMenu> menuList = null;
+
+        if(userId.longValue() == 1){
+            menuList = baseMapper.selectList(new QueryWrapper<SysMenu>().eq("status", 1).orderByAsc("sort_value"));
+
+        }else{
+            menuList = baseMapper.findMenuListByUserId(userId);
+        }
+
+        List<SysMenu> sysMenuTreeList = MenuHelper.buildTree(menuList);
+        List<RouterVo> routerVoList = RouterHelper.buildRouter(sysMenuTreeList);
+        return routerVoList;
+    }
+
+    @Override
+    public List<String> findUserPermsList(Long id) {
+        return null;
     }
 }

@@ -3,6 +3,7 @@ package com.lanxige.service;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.lanxige.model.system.SysMenu;
 import com.lanxige.model.vo.AssginMenuVo;
+import com.lanxige.model.vo.RouterVo;
 
 import java.util.List;
 
@@ -11,4 +12,6 @@ public interface ISysMenuService extends IService<SysMenu> {
     void removeMenuById(Long id);
     List<SysMenu> findSysMenuByRoleId(Long roleId);
     void doAssign(AssginMenuVo assginMenuVo);
+    List<RouterVo> findUserMenuList(Long userId);
+    List<String> findUserPermsList(Long id);
 }

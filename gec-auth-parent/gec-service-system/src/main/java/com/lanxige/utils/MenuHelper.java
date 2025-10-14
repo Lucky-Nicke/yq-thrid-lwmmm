@@ -1,4 +1,4 @@
-package com.lanxige.util;
+package com.lanxige.utils;
 
 
 import com.lanxige.model.system.SysMenu;

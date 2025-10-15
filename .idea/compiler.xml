@@ -10,6 +10,7 @@
         <module name="common-util" />
         <module name="gec-common" />
         <module name="gec-service-system" />
+        <module name="auth-security" />
         <module name="service-util" />
         <module name="gec-model" />
       </profile>

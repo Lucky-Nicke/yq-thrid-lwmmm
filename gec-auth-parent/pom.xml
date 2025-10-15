@@ -15,12 +15,15 @@
         <module>gec-service-system</module>
         <module>gec-common/service-util</module>
         <module>gec-common/common-util</module>
+        <module>gec-common/auth-security</module>
     </modules>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <lombok>1.18.42</lombok>
         <java.version>1.8</java.version>
+        <springweb>2.7.18</springweb>
+        <springsecurity>2.7.18</springsecurity>
         <alibaba.version>2.2.0.RELEASE</alibaba.version>
         <mybatis-plus.version>3.4.1</mybatis-plus.version>
         <mysql.version>8.0.23</mysql.version>
@@ -36,6 +39,33 @@
                 <groupId>org.projectlombok</groupId>
                 <artifactId>lombok</artifactId>
                 <version>${lombok}</version>
+            </dependency>
+            <!--spring web-->
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-starter-web</artifactId>
+                <version>${springweb}</version>
+            </dependency>
+            <!--spring security-->
+            <dependency>
+                <groupId>org.springframework.security</groupId>
+                <artifactId>spring-security-core</artifactId>
+                <version>5.7.11</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework.security</groupId>
+                <artifactId>spring-security-web</artifactId>
+                <version>5.7.11</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework.security</groupId>
+                <artifactId>spring-security-config</artifactId>
+                <version>5.7.11</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework.security</groupId>
+                <artifactId>spring-security-crypto</artifactId>
+                <version>5.7.11</version>
             </dependency>
             <!--mybatis-plus 持久层-->
             <dependency>

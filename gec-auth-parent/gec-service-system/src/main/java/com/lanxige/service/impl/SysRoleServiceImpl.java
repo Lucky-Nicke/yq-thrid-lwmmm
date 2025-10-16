@@ -9,7 +9,7 @@ import com.lanxige.model.system.SysRole;
 import com.lanxige.model.system.SysUserRole;
 import com.lanxige.model.vo.AssginRoleVo;
 import com.lanxige.model.vo.SysRoleQueryVo;
-import com.lanxige.service.ISysRoleService;
+import com.lanxige.service.SysRoleService;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -18,11 +18,11 @@ import java.util.List;
 import java.util.Map;
 
 @Service
-public class ISysRoleServiceImpl extends ServiceImpl<SysRoleMapper,SysRole> implements ISysRoleService {
+public class SysRoleServiceImpl extends ServiceImpl<SysRoleMapper,SysRole> implements SysRoleService {
     private final SysRoleMapper sysRoleMapper;
     private final SysUserRoleMapper sysUserRoleMapper;
 
-    public ISysRoleServiceImpl(SysRoleMapper sysRoleMapper, SysUserRoleMapper sysUserRoleMapper) {
+    public SysRoleServiceImpl(SysRoleMapper sysRoleMapper, SysUserRoleMapper sysUserRoleMapper) {
         this.sysRoleMapper = sysRoleMapper;
         this.sysUserRoleMapper = sysUserRoleMapper;
     }

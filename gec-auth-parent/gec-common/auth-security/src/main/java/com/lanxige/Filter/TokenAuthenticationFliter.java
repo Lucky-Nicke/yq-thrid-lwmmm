@@ -1,11 +1,14 @@
 package com.lanxige.Filter;
 
+import com.alibaba.fastjson.JSON;
 import com.lanxige.util.JwtHelper;
 import com.lanxige.util.ResponseUtil;
 import com.lanxige.util.Result;
 import com.lanxige.util.ResultCodeEnum;
 import com.mysql.cj.util.StringUtils;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.filter.OncePerRequestFilter;
 
@@ -14,10 +17,15 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 public class TokenAuthenticationFliter extends OncePerRequestFilter {
-    public TokenAuthenticationFliter(){
+    private RedisTemplate redisTemplate;
 
+    public TokenAuthenticationFliter(RedisTemplate redisTemplate){
+        this.redisTemplate = redisTemplate;
     }
 
     @Override
@@ -45,7 +53,13 @@ public class TokenAuthenticationFliter extends OncePerRequestFilter {
             String username = JwtHelper.getUsername(token);
             logger.info("username:"+username);
             if (!StringUtils.isNullOrEmpty(username)){
-                return new UsernamePasswordAuthenticationToken(username,null,null);
+                String authoritiesString = (String) redisTemplate.opsForValue().get(username);
+                List<Map> mapList = JSON.parseArray(authoritiesString, Map.class);
+                List<SimpleGrantedAuthority> authorities = new ArrayList<>();
+                for (Map map : mapList){
+                    authorities.add(new SimpleGrantedAuthority((String) map.get("authority")));
+                }
+                return new UsernamePasswordAuthenticationToken(username,null,authorities);
             }
         }
         return null;

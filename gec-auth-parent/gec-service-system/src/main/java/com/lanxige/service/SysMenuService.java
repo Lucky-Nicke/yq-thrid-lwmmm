@@ -7,7 +7,7 @@ import com.lanxige.model.vo.RouterVo;
 
 import java.util.List;
 
-public interface ISysMenuService extends IService<SysMenu> {
+public interface SysMenuService extends IService<SysMenu> {
     List<SysMenu> findNodes();
     void removeMenuById(Long id);
     List<SysMenu> findSysMenuByRoleId(Long roleId);

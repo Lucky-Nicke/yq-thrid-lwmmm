@@ -7,28 +7,20 @@ import com.lanxige.mapper.SysUserMapper;
 import com.lanxige.model.system.SysUser;
 import com.lanxige.model.vo.RouterVo;
 import com.lanxige.model.vo.SysUserQueryVo;
-import com.lanxige.service.ISysMenuService;
-import com.lanxige.service.ISysUserService;
+import com.lanxige.service.SysMenuService;
+import com.lanxige.service.SysUserService;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-/**
- * <p>
- * 用户表 服务实现类
- * </p>
- *
- * @author Nicke
- * @since 2025-10-11
- */
 @Service
-public class ISysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> implements ISysUserService {
-    private final ISysMenuService iSysMenuService;
+public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> implements SysUserService {
+    private final SysMenuService iSysMenuService;
 
-    public ISysUserServiceImpl(ISysMenuService iSysMenuService) {
-        this.iSysMenuService = iSysMenuService;
+    public SysUserServiceImpl(SysMenuService SysMenuService) {
+        this.iSysMenuService = SysMenuService;
     }
 
     @Override

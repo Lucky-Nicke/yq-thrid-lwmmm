@@ -8,7 +8,7 @@ import com.lanxige.model.vo.SysRoleQueryVo;
 
 import java.util.Map;
 
-public interface ISysRoleService extends IService<SysRole>{
+public interface SysRoleService extends IService<SysRole>{
     IPage<SysRole> selectPage(IPage<SysRole> page, SysRoleQueryVo roleQueryVo);
     Map<String, Object> getRolesByUserId(Long userId);
     void doAssign(AssginRoleVo assginRoleVo);

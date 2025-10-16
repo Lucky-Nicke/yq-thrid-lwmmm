@@ -1,20 +1,26 @@
 package com.lanxige.service.impl;
 
 import com.lanxige.model.system.SysUser;
-import com.lanxige.service.ISysUserService;
+import com.lanxige.service.SysMenuService;
+import com.lanxige.service.SysUserService;
 import com.lanxige.util.CustomUser;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-import java.util.Collections;
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 public class LoginUserDetailsServiceImpl implements UserDetailsService {
     @Autowired
-    private ISysUserService sysUserService;
+    private SysUserService sysUserService;
+
+    @Autowired
+    private SysMenuService sysMenuService;
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
@@ -27,7 +33,13 @@ public class LoginUserDetailsServiceImpl implements UserDetailsService {
         if (sysUser.getStatus().intValue() == 0) {
             throw new RuntimeException("用户已禁用");
         }
+
+        List<String> userPermsList = sysMenuService.findUserPermsList(sysUser.getId());
+        List<SimpleGrantedAuthority> authorities = new ArrayList<>();
+        for (String perm : userPermsList) {
+            authorities.add(new SimpleGrantedAuthority(perm.trim()));
+        }
         // 返回用户详情（包含用户名、密码、权限等）
-        return new CustomUser(sysUser, Collections.emptyList());
+        return new CustomUser(sysUser, authorities);
     }
 }

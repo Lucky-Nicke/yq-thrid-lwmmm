@@ -5,30 +5,24 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.lanxige.model.system.SysUser;
 import com.lanxige.model.vo.SysUserQueryVo;
-import com.lanxige.service.ISysUserService;
+import com.lanxige.service.SysUserService;
 import com.lanxige.util.MD5Helper;
 import com.lanxige.util.Result;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-/**
- * <p>
- * 用户表 前端控制器
- * </p>
- *
- * @author Nicke
- * @since 2025-10-11
- */
+
 @RestController
 @Api(tags = "用户管理控制器")
 @RequestMapping("/admin/system/sysUser")
 public class SysUserController {
     @Autowired
-    private ISysUserService sysUserService;
+    private SysUserService sysUserService;
 
     @ApiOperation("分页和条件查询")
     @GetMapping("/{page}/{limit}")
@@ -39,6 +33,7 @@ public class SysUserController {
     }
 
     // 添加用户
+    @PreAuthorize("hasAuthority('bnt.sysUser.add')")
     @ApiOperation("添加用户")
     @PostMapping("/addUser")
     public Result addUser(@RequestBody SysUser sysUser) {
@@ -62,6 +57,7 @@ public class SysUserController {
         return Result.ok(sysUser);
     }
 
+    @PreAuthorize("hasAuthority('bnt.sysUser.update')")
     @ApiOperation("修改用户信息")
     @PostMapping("/updateUser")
     public Result updateUser(@RequestBody SysUser sysUser) {
@@ -73,6 +69,7 @@ public class SysUserController {
         }
     }
 
+    @PreAuthorize("hasAuthority('bnt.sysUser.remove')")
     @ApiOperation("删除用户")
     @DeleteMapping("/deleteUser/{id}")
     public Result deleteUser(@PathVariable Long id) {
@@ -85,6 +82,7 @@ public class SysUserController {
         }
     }
 
+    @PreAuthorize("hasAuthority('bnt.sysUser.remove')")
     @ApiOperation("批量删除用户")
     @DeleteMapping("/batchDeleteUser")
     public Result batchDeleteUser(@RequestBody List<Long> ids) {
@@ -97,6 +95,7 @@ public class SysUserController {
         }
     }
 
+    @PreAuthorize("hasAuthority('bnt.sysUser.update')")
     @ApiOperation("更改用户状态")
     @GetMapping("/updateStatus/{id}/{status}")
     public Result updateStatus(@PathVariable Long id, @PathVariable Integer status) {

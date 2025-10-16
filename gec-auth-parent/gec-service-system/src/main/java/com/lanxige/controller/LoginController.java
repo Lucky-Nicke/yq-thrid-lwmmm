@@ -1,7 +1,7 @@
 package com.lanxige.controller;
 
 import com.lanxige.model.vo.LoginVo;
-import com.lanxige.service.ISysUserService;
+import com.lanxige.service.SysUserService;
 import com.lanxige.util.JwtHelper;
 import com.lanxige.util.Result;
 import io.swagger.annotations.Api;
@@ -17,7 +17,7 @@ import java.util.Map;
 public class LoginController {
 
     @Autowired
-    private ISysUserService sysUserService;
+    private SysUserService sysUserService;
 
     @PostMapping("/login")
     public void login(@RequestBody LoginVo loginVo) {

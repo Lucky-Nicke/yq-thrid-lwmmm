@@ -1,18 +1,14 @@
 package com.lanxige.controller;
 
-import com.lanxige.exception.MyCustomerException;
-import com.lanxige.model.system.SysUser;
 import com.lanxige.model.vo.LoginVo;
 import com.lanxige.service.ISysUserService;
 import com.lanxige.util.JwtHelper;
-import com.lanxige.util.MD5Helper;
 import com.lanxige.util.Result;
 import io.swagger.annotations.Api;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.HashMap;
 import java.util.Map;
 
 @RestController
@@ -24,28 +20,8 @@ public class LoginController {
     private ISysUserService sysUserService;
 
     @PostMapping("/login")
-    public Result login(@RequestBody LoginVo loginVo) {
-        SysUser sysUser = this.sysUserService.getUserInfoUserName(loginVo.getUsername());
+    public void login(@RequestBody LoginVo loginVo) {
 
-        if (sysUser == null) {
-            throw new MyCustomerException(20001, "用户名不存在");
-        }
-
-        String password = loginVo.getPassword();
-        String passwordWithMD5 = MD5Helper.md5(password);
-
-        if (!sysUser.getPassword().equals(passwordWithMD5)) {
-            throw new MyCustomerException(20001, "密码错误");
-        }
-
-        if (sysUser.getStatus().intValue() == 0) {
-            throw new MyCustomerException(20001, "用户已禁用");
-        }
-
-        String token = JwtHelper.createToken(sysUser.getId(), sysUser.getUsername());
-        Map<String, Object> map = new HashMap<>();
-        map.put("token", token);
-        return Result.ok(map);
     }
 
     @GetMapping(value = "/info")

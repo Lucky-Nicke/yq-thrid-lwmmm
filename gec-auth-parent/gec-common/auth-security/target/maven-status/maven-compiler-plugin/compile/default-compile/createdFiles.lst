@@ -1,1 +1,5 @@
-com\lanxige\config\SecurityConfig.class
+com\lanxige\Filter\TokenLoginFliter.class
+com\lanxige\config\WebSecurityConfig.class
+com\lanxige\util\CustomUser.class
+com\lanxige\util\CustomMd5PasswordEncoder.class
+com\lanxige\Filter\TokenAuthenticationFliter.class

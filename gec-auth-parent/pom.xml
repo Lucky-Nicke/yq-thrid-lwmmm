@@ -9,21 +9,26 @@
 
     <name>gec-auth-parent</name>
     <url>http://maven.apache.org</url>
+
+    <parent>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <version>2.7.18</version>
+    </parent>
+
     <modules>
         <module>gec-common</module>
         <module>gec-model</module>
-        <module>gec-service-system</module>
-        <module>gec-common/service-util</module>
-        <module>gec-common/common-util</module>
         <module>gec-common/auth-security</module>
+        <module>gec-common/common-util</module>
+        <module>gec-common/service-util</module>
+        <module>gec-service-system</module>
     </modules>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <lombok>1.18.42</lombok>
         <java.version>1.8</java.version>
-        <springweb>2.7.18</springweb>
-        <springsecurity>2.7.18</springsecurity>
         <alibaba.version>2.2.0.RELEASE</alibaba.version>
         <mybatis-plus.version>3.4.1</mybatis-plus.version>
         <mysql.version>8.0.23</mysql.version>
@@ -34,19 +39,6 @@
 
     <dependencyManagement>
         <dependencies>
-            <!--lombok -->
-            <dependency>
-                <groupId>org.projectlombok</groupId>
-                <artifactId>lombok</artifactId>
-                <version>${lombok}</version>
-            </dependency>
-            <!--spring web-->
-            <dependency>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-starter-web</artifactId>
-                <version>${springweb}</version>
-            </dependency>
-            <!--spring security-->
             <dependency>
                 <groupId>org.springframework.security</groupId>
                 <artifactId>spring-security-core</artifactId>
@@ -66,6 +58,12 @@
                 <groupId>org.springframework.security</groupId>
                 <artifactId>spring-security-crypto</artifactId>
                 <version>5.7.11</version>
+            </dependency>
+            <!--lombok -->
+            <dependency>
+                <groupId>org.projectlombok</groupId>
+                <artifactId>lombok</artifactId>
+                <version>${lombok}</version>
             </dependency>
             <!--mybatis-plus 持久层-->
             <dependency>

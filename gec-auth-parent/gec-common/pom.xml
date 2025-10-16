@@ -8,7 +8,7 @@
     </parent>
 
     <artifactId>gec-common</artifactId>
-    <packaging>jar</packaging>
+    <packaging>pom</packaging>
 
     <name>gec-common</name>
     <url>http://maven.apache.org</url>
@@ -20,6 +20,24 @@
     </properties>
 
     <dependencies>
+        <dependency>
+            <groupId>com.lanxige</groupId>
+            <artifactId>auth-security</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.lanxige</groupId>
+            <artifactId>service-util</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.lanxige</groupId>
+            <artifactId>common-util</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
+
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>

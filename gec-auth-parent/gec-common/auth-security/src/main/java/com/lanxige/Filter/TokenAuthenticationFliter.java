@@ -31,7 +31,9 @@ public class TokenAuthenticationFliter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         logger.info("uri:"+request.getRequestURI());
-        if("/admin/system/index/login".equals(request.getRequestURI())){
+        if("/admin/system/index/login".equals(request.getRequestURI())
+                ||"/admin/system/upload/uploadImage".equals(request.getRequestURI())
+                ||"/admin/system/upload/uploadVideo".equals(request.getRequestURI())){
             filterChain.doFilter(request,response);
             return;
         }

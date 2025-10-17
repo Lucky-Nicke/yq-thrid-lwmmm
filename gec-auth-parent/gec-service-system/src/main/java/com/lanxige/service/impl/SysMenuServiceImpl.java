@@ -27,9 +27,7 @@ public class SysMenuServiceImpl extends ServiceImpl<SysMenuMapper, SysMenu> impl
     @Override
     public List<SysMenu> findNodes() {
         List<SysMenu> menuList = this.baseMapper.selectList(null);
-        List<SysMenu> resultList = MenuHelper.buildTree(menuList);
-
-        return resultList;
+        return MenuHelper.buildTree(menuList);
     }
 
     @Override

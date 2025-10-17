@@ -36,6 +36,8 @@ public class TokenLoginFliter extends UsernamePasswordAuthenticationFilter {
     public Authentication attemptAuthentication(HttpServletRequest req, HttpServletResponse res) {
         LoginVo loginVo = new ObjectMapper().readValue(req.getInputStream(), LoginVo.class);
         Authentication authentication = new UsernamePasswordAuthenticationToken(loginVo.getUsername(), loginVo.getPassword());
+        //调用认证管理器：通过getAuthenticationManager().authenticate(authentication)
+        //触发认证，认证管理器会调用 UserDetailsService 的 loadUserByUsername 方法
         return this.getAuthenticationManager().authenticate(authentication);
     }
 

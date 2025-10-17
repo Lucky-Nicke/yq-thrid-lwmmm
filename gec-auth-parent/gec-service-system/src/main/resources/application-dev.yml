@@ -36,3 +36,7 @@ aliyun:
     accessKeySecret: xxx # 秘钥
     bucketName: lucky-nicke  # 桶名
     url: http://file.lanxige.club  # 访问地址
+  vod: # 视频
+    regionId: xxx
+    accessKeyId: xxx
+    accessKeySecret: xxx

@@ -1,14 +1,17 @@
 package com.lanxige.controller;
 
+import com.aliyuncs.vod.model.v20170321.GetVideoPlayAuthRequest;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.lanxige.model.system.SysMovie;
 import com.lanxige.model.vo.SysMovieQueryVo;
 import com.lanxige.service.SysMovieService;
 import com.lanxige.util.Result;
+import com.lanxige.utils.VodTemplate;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
@@ -20,6 +23,9 @@ import java.util.List;
 public class SysMovieController {
     @Autowired
     private SysMovieService sysMovieService;
+
+    @Autowired
+    private VodTemplate vodTemplate;
 
     @ApiOperation("获取全部影视列表")
     @GetMapping("/findAll")
@@ -93,9 +99,10 @@ public class SysMovieController {
     }
 
     // 播放视频   根据id 和 播放秘钥
+    @PreAuthorize("hasAuthority('bnt.sysMovie.assignVideo')")
+    @ApiOperation("根据id获取播放凭证")
     @RequestMapping(value = "/getPlayAuth/{id}")
     public Result playVideoByAuth(@PathVariable Long id) throws Exception {
-
         //1.根据id 获取 到 SysMovie
         SysMovie sysMovie = this.sysMovieService.getById(id);
         //2. 从  SysMovie 中获取到 image  playId  Auth
@@ -103,21 +110,16 @@ public class SysMovieController {
 
         String playId = sysMovie.getPlayId();
         System.out.println("playId = " + playId);
-
-        //  获取 播放秘钥
-
         // 根据playId 去阿里云服务器获取播放秘钥
-
-//        String playAuth = this.vodTemplate.getVideoPlayAuth(playId).getPlayAuth();
-
-
+        GetVideoPlayAuthRequest request = new GetVideoPlayAuthRequest();
+        request.setVideoId(playId);
+        String playAuth = this.vodTemplate.getVideoPlayAuth(playId).getPlayAuth();
         // 封装map 集合
         HashMap<String, Object> map = new HashMap<>();
         // 分别封装三个参数  参数的key 要和前端对应
         map.put("image", image);
         map.put("playId", playId);
-//        map.put("playAuth", playAuth);
+        map.put("playAuth", playAuth);
         return Result.ok(map);
-
     }
 }

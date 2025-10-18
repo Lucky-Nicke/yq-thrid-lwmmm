@@ -2,6 +2,7 @@ package com.lanxige.config;
 
 import com.lanxige.Filter.TokenAuthenticationFliter;
 import com.lanxige.Filter.TokenLoginFliter;
+import com.lanxige.service.SysLoginService;
 import com.lanxige.util.CustomMd5PasswordEncoder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -17,6 +18,7 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 @Configuration
 @EnableGlobalMethodSecurity(prePostEnabled = true)
@@ -32,10 +34,27 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     private RedisTemplate redisTemplate;
 
+    @Autowired
+    private SysLoginService sysLoginService;
+
     @Bean
     @Override
     protected AuthenticationManager authenticationManager() throws Exception {
         return super.authenticationManager();
+    }
+
+    @Bean
+    public TokenLoginFliter tokenLoginFliter() throws Exception {
+        TokenLoginFliter filter = new TokenLoginFliter(
+                authenticationManager(),
+                redisTemplate,
+                sysLoginService
+        );
+        // 这里可以设置过滤器的其他属性（如拦截路径）
+        filter.setRequiresAuthenticationRequestMatcher(
+                new AntPathRequestMatcher("/admin/system/index/login", "POST")
+        );
+        return filter;
     }
 
     @Override
@@ -60,8 +79,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 //TokenAuthenticationFilter放到UsernamePasswordAuthenticationFilter的前面，这样做就是为了除了登录的时候去查询数据库外，其他时候都用token进行认证。
                 .addFilterBefore(new TokenAuthenticationFliter(redisTemplate), UsernamePasswordAuthenticationFilter.class)
-                .addFilter(new TokenLoginFliter(authenticationManager(),redisTemplate));
-
+                .addFilter(tokenLoginFliter());
         //禁用session
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
     }

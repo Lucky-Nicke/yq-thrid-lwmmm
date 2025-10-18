@@ -3,6 +3,7 @@ package com.lanxige.Filter;
 import com.alibaba.fastjson.JSON;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.lanxige.model.vo.LoginVo;
+import com.lanxige.service.SysLoginService;
 import com.lanxige.util.*;
 import lombok.SneakyThrows;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -24,11 +25,14 @@ import java.util.Map;
 public class TokenLoginFliter extends UsernamePasswordAuthenticationFilter {
     private RedisTemplate redisTemplate;
 
-    public TokenLoginFliter(AuthenticationManager authenticationManager, RedisTemplate redisTemplate) {
+    private SysLoginService sysLoginService;
+
+    public TokenLoginFliter(AuthenticationManager authenticationManager, RedisTemplate redisTemplate, SysLoginService sysLoginService) {
         this.setAuthenticationManager(authenticationManager);
         this.setPostOnly(false);
         this.setRequiresAuthenticationRequestMatcher(new AntPathRequestMatcher("/admin/system/index/login", "POST"));
         this.redisTemplate = redisTemplate;
+        this.sysLoginService = sysLoginService;
     }
 
     @SneakyThrows
@@ -45,6 +49,7 @@ public class TokenLoginFliter extends UsernamePasswordAuthenticationFilter {
     protected void successfulAuthentication(HttpServletRequest req, HttpServletResponse res, FilterChain chain, Authentication authentication) throws IOException, ServletException {
         CustomUser customUser = (CustomUser) authentication.getPrincipal();
         String token = JwtHelper.createToken(customUser.getSysUser().getId(), customUser.getSysUser().getUsername());
+        sysLoginService.recordLoginLog(customUser.getUsername(),1, IpUtil.getIpAddress(req),"登录成功");
         redisTemplate.opsForValue().set(customUser.getUsername(), JSON.toJSONString(customUser.getAuthorities()));
         Map<String, Object> map = new HashMap<>();
         map.put("token", token);

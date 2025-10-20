@@ -3,6 +3,7 @@ package com.lanxige.controller;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.lanxige.model.system.SysLoginLog;
+import com.lanxige.model.vo.SysLoginLogQueryVo;
 import com.lanxige.service.impl.SysLoginServiceImpl;
 import com.lanxige.util.Result;
 import io.swagger.annotations.Api;
@@ -21,15 +22,15 @@ public class RecordLogController {
 
     @ApiOperation("查询登录记录log")
     @GetMapping("/{page}/{limit}")
-    public Result getRecordLog(@PathVariable Long page, @PathVariable Long limit){
+    public Result getRecordLog(@PathVariable Long page, @PathVariable Long limit, SysLoginLogQueryVo sysLoginLogQueryVo){
         IPage<SysLoginLog> iPage = new Page<>(page,limit);
-        iPage = this.sysLoginService.getLoginLog(iPage);
+        iPage = this.sysLoginService.getLoginLog(iPage,sysLoginLogQueryVo);
         return Result.ok(iPage);
     }
 
     @ApiOperation("删除登录记录")
     @PostMapping("/del/{id}")
-    public Result getRecordLog(@PathVariable Long id){
+    public Result delRecordLog(@PathVariable Long id){
         boolean b = this.sysLoginService.removeById(id);
         if (b) {
             return Result.ok();
@@ -41,7 +42,7 @@ public class RecordLogController {
 
     @ApiOperation("批量删除登录记录")
     @PostMapping("/batchdel/{ids}")
-    public Result getRecordLog(@PathVariable List<Long> ids){
+    public Result batchDelRecordLog(@PathVariable List<Long> ids){
         boolean b = this.sysLoginService.removeByIds(ids);
         if (b) {
             return Result.ok();

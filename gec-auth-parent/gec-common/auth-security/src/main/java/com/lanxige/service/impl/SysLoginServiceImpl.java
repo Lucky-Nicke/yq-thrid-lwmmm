@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.lanxige.mapper.SysLoginLogMapper;
 import com.lanxige.model.system.SysLoginLog;
+import com.lanxige.model.vo.SysLoginLogQueryVo;
 import com.lanxige.service.SysLoginService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -27,7 +28,7 @@ public class SysLoginServiceImpl extends ServiceImpl<SysLoginLogMapper, SysLogin
     }
 
     @Override
-    public IPage<SysLoginLog> getLoginLog(IPage<SysLoginLog> iPage) {
-        return this.sysLoginLogMapper.selectPage(iPage,null);
+    public IPage<SysLoginLog> getLoginLog(IPage<SysLoginLog> iPage, SysLoginLogQueryVo sysLoginLogQueryVo) {
+        return this.sysLoginLogMapper.selectPage(iPage, sysLoginLogQueryVo);
     }
 }

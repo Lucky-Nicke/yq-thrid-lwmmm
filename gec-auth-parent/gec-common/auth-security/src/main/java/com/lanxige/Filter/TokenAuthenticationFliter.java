@@ -33,7 +33,9 @@ public class TokenAuthenticationFliter extends OncePerRequestFilter {
         logger.info("uri:"+request.getRequestURI());
         if("/admin/system/index/login".equals(request.getRequestURI())
                 ||"/admin/system/upload/uploadImage".equals(request.getRequestURI())
-                ||"/admin/system/upload/uploadVideo".equals(request.getRequestURI())){
+                ||"/admin/system/upload/uploadVideo".equals(request.getRequestURI())
+                ||"/admin/system/sysCategory/findAll".equals(request.getRequestURI())
+        ){
             filterChain.doFilter(request,response);
             return;
         }

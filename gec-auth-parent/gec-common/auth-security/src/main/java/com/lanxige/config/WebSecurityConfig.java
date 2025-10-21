@@ -19,6 +19,7 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
+import org.springframework.web.bind.annotation.CrossOrigin;
 
 @Configuration
 @EnableGlobalMethodSecurity(prePostEnabled = true)
@@ -70,6 +71,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
                 .antMatchers("/admin/system/upload/uploadImage").permitAll()
                 .antMatchers("/admin/system/upload/uploadVideo").permitAll()
+                .antMatchers("/admin/system/sysCategory/findAll").permitAll()
                 // 指定某些接口不需要通过验证即可访问。登陆接口肯定是不需要认证的
                 .antMatchers("/admin/system/index/login").permitAll()
 

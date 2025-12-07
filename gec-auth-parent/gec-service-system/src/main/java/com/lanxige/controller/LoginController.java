@@ -14,6 +14,7 @@ import java.util.Map;
 @RestController
 @Api(tags = "登录管理控制器")
 @RequestMapping("/admin/system/index")
+@CrossOrigin
 public class LoginController {
 
     @Autowired

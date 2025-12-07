@@ -16,6 +16,7 @@ import java.util.List;
 @RestController
 @Api(tags = "影视分类")
 @RequestMapping("/admin/system/sysCategory")
+@CrossOrigin
 public class SysCategoryController {
     @Autowired
     private SysCategoryService sysCategoryService;

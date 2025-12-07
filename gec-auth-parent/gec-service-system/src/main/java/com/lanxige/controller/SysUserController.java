@@ -20,6 +20,7 @@ import java.util.List;
 @RestController
 @Api(tags = "用户管理控制器")
 @RequestMapping("/admin/system/sysUser")
+@CrossOrigin
 public class SysUserController {
     @Autowired
     private SysUserService sysUserService;

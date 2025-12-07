@@ -15,6 +15,7 @@ import java.util.List;
 @Api(tags = "系统菜单控制器")
 @RestController
 @RequestMapping("/admin/system/sysMenu")
+@CrossOrigin
 public class SysMenuController {
     @Autowired
     private SysMenuService sysMenuService;

@@ -16,6 +16,7 @@ import java.util.List;
 @RestController
 @Api(tags = "系统管理-登录日志")
 @RequestMapping("/admin/system/record")
+@CrossOrigin
 public class RecordLogController {
     @Autowired
     private SysLoginServiceImpl sysLoginService;

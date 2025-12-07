@@ -20,6 +20,7 @@ import java.util.List;
 @RestController
 @Api(tags = "影视管理控制器")
 @RequestMapping("/admin/system/sysMovie")
+@CrossOrigin
 public class SysMovieController {
     @Autowired
     private SysMovieService sysMovieService;

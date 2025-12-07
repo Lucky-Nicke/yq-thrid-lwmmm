@@ -16,6 +16,7 @@ import java.util.List;
 @RestController
 @Api(tags = "系统管理-打开菜单日志")
 @RequestMapping("/admin/system/openrecord")
+@CrossOrigin
 public class RecordOpenLogController {
     @Autowired
     private SysOpenLogService sysOpenLogService;

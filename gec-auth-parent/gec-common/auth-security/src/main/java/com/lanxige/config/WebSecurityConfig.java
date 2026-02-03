@@ -19,7 +19,6 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
-import org.springframework.web.bind.annotation.CrossOrigin;
 
 @Configuration
 @EnableGlobalMethodSecurity(prePostEnabled = true)
@@ -74,6 +73,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/admin/system/sysCategory/findAll").permitAll()
                 // 指定某些接口不需要通过验证即可访问。登陆接口肯定是不需要认证的
                 .antMatchers("/admin/system/index/login").permitAll()
+                .antMatchers("/admin/system/index/changePwd").permitAll()
 
                 // 这里意思是其它所有接口需要认证才能访问
                 .anyRequest().authenticated()
@@ -94,6 +94,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     public void configure(WebSecurity web) throws Exception {
-        web.ignoring().antMatchers("/favicon.ico","/swagger-resources/**", "/webjars/**", "/v2/**", "/swagger-ui.html/**", "/doc.html");
+        web.ignoring().antMatchers("/favicon.ico", "/swagger-resources/**", "/webjars/**", "/v2/**", "/swagger-ui.html/**", "/doc.html");
     }
 }

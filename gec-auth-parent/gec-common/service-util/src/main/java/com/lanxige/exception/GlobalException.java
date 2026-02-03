@@ -15,7 +15,7 @@ public class GlobalException {
     public Result error(Exception e) {
         System.out.println("全局执行....");
         e.printStackTrace();
-        return Result.fail().message("执行了全局异常处理...");
+        return Result.fail().message(e.getMessage());
     }
 
     //2.特定异常处理

@@ -4,7 +4,8 @@
     <resultMap id="SysUserMap" type="com.lanxige.model.system.SysUser" autoMapping="true"></resultMap>
 
     <sql id="columns">
-        id,username,password,name,phone,head_url,post_id,dept_id,description,status,create_time,update_time,is_deleted
+        id
+        ,username,password,name,phone,head_url,description,status,create_time,update_time,is_deleted
     </sql>
 
     <select id="selectPage" resultMap="SysUserMap">

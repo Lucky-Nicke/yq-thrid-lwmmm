@@ -6,12 +6,12 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.lanxige.model.system.SysUser;
 import com.lanxige.model.vo.SysUserQueryVo;
 import com.lanxige.service.SysUserService;
-import com.lanxige.util.MD5Helper;
 import com.lanxige.util.Result;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -25,6 +25,7 @@ public class SysUserController {
     @Autowired
     private SysUserService sysUserService;
 
+    @PreAuthorize("hasAuthority('bnt.sysUser.list')")
     @ApiOperation("分页和条件查询")
     @GetMapping("/{page}/{limit}")
     public Result selectUserPageByVo(@PathVariable Long page, @PathVariable Long limit, SysUserQueryVo sysUserQueryVo) {
@@ -37,12 +38,8 @@ public class SysUserController {
     @PreAuthorize("hasAuthority('bnt.sysUser.add')")
     @ApiOperation("添加用户")
     @PostMapping("/addUser")
-    public Result addUser(@RequestBody SysUser sysUser) {
-        //MD5加密密码
-        String passwordWithMD5 = MD5Helper.md5(sysUser.getPassword());
-        sysUser.setPassword(passwordWithMD5);
-
-        boolean b = this.sysUserService.save(sysUser);
+    public Result addUser(@Validated @RequestBody SysUser sysUser) {
+        boolean b = sysUserService.addUser(sysUser);
         if (b) {
             return Result.ok();
         } else {
@@ -51,6 +48,7 @@ public class SysUserController {
     }
 
     // 根据id 去获取一个用户
+    @PreAuthorize("hasAuthority('bnt.sysUser.list')")
     @ApiOperation("根据id查询用户")
     @GetMapping("/findUserById/{id}")
     public Result findUserById(@PathVariable Long id) {
@@ -61,7 +59,7 @@ public class SysUserController {
     @PreAuthorize("hasAuthority('bnt.sysUser.update')")
     @ApiOperation("修改用户信息")
     @PostMapping("/updateUser")
-    public Result updateUser(@RequestBody SysUser sysUser) {
+    public Result updateUser(@Validated @RequestBody SysUser sysUser) {
         boolean b = this.sysUserService.updateById(sysUser);
         if (b) {
             return Result.ok();

@@ -24,4 +24,12 @@ public interface SysUserService extends IService<SysUser> {
      * @return 修改结果
      */
     int updatePassword(ChangePwdReq changePwdReq);
+
+    /**
+     * 添加用户
+     *
+     * @param sysUser 用户信息
+     * @return 添加结果
+     */
+    boolean addUser(SysUser sysUser);
 }

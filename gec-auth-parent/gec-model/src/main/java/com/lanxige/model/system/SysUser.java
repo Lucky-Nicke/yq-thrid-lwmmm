@@ -2,7 +2,6 @@ package com.lanxige.model.system;
 
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
-
 import com.lanxige.model.base.BaseEntity;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -14,7 +13,7 @@ import java.util.List;
 @ApiModel(description = "用户")
 @TableName("sys_user")
 public class SysUser extends BaseEntity {
-	
+
 	private static final long serialVersionUID = 1L;
 
 	@ApiModelProperty(value = "用户名")
@@ -37,14 +36,6 @@ public class SysUser extends BaseEntity {
 	@TableField("head_url")
 	private String headUrl;
 
-	@ApiModelProperty(value = "部门id")
-	@TableField("dept_id")
-	private Long deptId;
-
-	@ApiModelProperty(value = "岗位id")
-	@TableField("post_id")
-	private Long postId;
-
 	@ApiModelProperty(value = "描述")
 	@TableField("description")
 	private String description;
@@ -55,11 +46,5 @@ public class SysUser extends BaseEntity {
 
 	@TableField(exist = false)
 	private List<SysRole> roleList;
-	//岗位
-	@TableField(exist = false)
-	private String postName;
-	//部门
-	@TableField(exist = false)
-	private String deptName;
 }
 

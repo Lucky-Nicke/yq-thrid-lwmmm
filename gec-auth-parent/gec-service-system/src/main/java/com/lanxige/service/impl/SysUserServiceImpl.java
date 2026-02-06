@@ -34,6 +34,7 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
 
     @Override
     public IPage<SysUser> selectPage(IPage<SysUser> iPage, SysUserQueryVo sysUserQueryVo) {
+        log.info("分页查询用户信息");
         return this.baseMapper.selectPage(iPage, sysUserQueryVo);
     }
 
@@ -106,5 +107,56 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
         sysUser.setPassword(newPasswordWithMD5);
 
         return sysUserMapper.update(sysUser, qw);
+    }
+
+    /**
+     * 添加用户
+     *
+     * @param sysUser 用户信息
+     * @return 添加结果
+     */
+    @Override
+    public boolean addUser(SysUser sysUser) {
+        // 非空判断
+        if (StringUtils.isBlank(sysUser.getUsername()) ||
+                StringUtils.isBlank(sysUser.getPassword()) ||
+                StringUtils.isBlank(sysUser.getName()) ||
+                StringUtils.isBlank(sysUser.getPhone())
+        ) {
+            throw new RuntimeException("用户名、密码、姓名、手机不能为空");
+        }
+
+        // 检测用户名是否重复
+        SysUser infoUserName = getUserInfoUserName(sysUser.getUsername());
+        if (infoUserName != null) {
+            if (infoUserName.getUsername().equals(sysUser.getUsername())) {
+                throw new RuntimeException("用户名已存在");
+            }
+
+            // 检测手机号是否重复
+            String phone = infoUserName.getPhone();
+            if (phone != null) {
+                if (phone.equals(sysUser.getPhone())) {
+                    throw new RuntimeException("手机号已存在");
+                }
+            }
+        }
+
+        // 检测手机号是否等于11位
+        if (sysUser.getPhone().length() != 11) {
+            throw new RuntimeException("手机号必须为11位");
+        }
+
+        // 检测密码是否大于六位
+        if (sysUser.getPassword().length() < 6) {
+            throw new RuntimeException("密码不能小于六位");
+        }
+
+        //MD5加密密码
+        String passwordWithMD5 = MD5Helper.md5(sysUser.getPassword());
+        sysUser.setPassword(passwordWithMD5);
+        sysUser.setHeadUrl("http://file.lanxige.club/img/yq-third-lwmmm/Default/identicon.png");
+
+        return save(sysUser);
     }
 }

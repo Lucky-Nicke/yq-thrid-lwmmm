@@ -9,12 +9,38 @@ import com.lanxige.model.vo.SysUserQueryVo;
 import java.util.Map;
 
 public interface SysUserService extends IService<SysUser> {
+    /**
+     * 分页查询用户信息
+     *
+     * @param iPage          分页数据
+     * @param sysUserQueryVo 查询条件
+     * @return 分页数据
+     */
     IPage<SysUser> selectPage(IPage<SysUser> iPage, SysUserQueryVo sysUserQueryVo);
 
-    void updateStatusById(Long id, Integer status);
+    /**
+     * 修改用户状态
+     *
+     * @param id     用户id
+     * @param status 用户状态
+     * @return 修改结果
+     */
+    boolean updateStatusById(Long id, Integer status);
 
+    /**
+     * 根据用户名查询用户信息
+     *
+     * @param username 用户名
+     * @return 用户信息
+     */
     SysUser getUserInfoUserName(String username);
 
+    /**
+     * 获取用户信息
+     *
+     * @param username 用户名
+     * @return 用户信息
+     */
     Map<String, Object> getUserInfo(String username);
 
     /**

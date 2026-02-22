@@ -32,19 +32,41 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
         this.iSysMenuService = SysMenuService;
     }
 
+    /**
+     * 分页查询用户信息
+     *
+     * @param iPage          分页数据
+     * @param sysUserQueryVo 查询条件
+     * @return 分页数据
+     */
     @Override
     public IPage<SysUser> selectPage(IPage<SysUser> iPage, SysUserQueryVo sysUserQueryVo) {
         log.info("分页查询用户信息");
         return this.baseMapper.selectPage(iPage, sysUserQueryVo);
     }
 
+    /**
+     * 修改用户状态
+     *
+     * @param id     用户id
+     * @param status 用户状态
+     * @return 修改结果
+     */
     @Override
-    public void updateStatusById(Long id, Integer status) {
+    public boolean updateStatusById(Long id, Integer status) {
         SysUser sysUser = this.getById(id);
         sysUser.setStatus(status);
-        this.baseMapper.updateById(sysUser);
+        int i = this.baseMapper.updateById(sysUser);
+
+        return i > 0;
     }
 
+    /**
+     * 根据用户名查询用户信息
+     *
+     * @param username 用户名
+     * @return 用户信息
+     */
     @Override
     public SysUser getUserInfoUserName(String username) {
         QueryWrapper<SysUser> queryWrapper = new QueryWrapper<>();
@@ -52,6 +74,12 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
         return this.baseMapper.selectOne(queryWrapper);
     }
 
+    /**
+     * 获取用户信息
+     *
+     * @param username 用户名
+     * @return 用户信息
+     */
     @Override
     public Map<String, Object> getUserInfo(String username) {
         Map<String, Object> map = new HashMap<>();

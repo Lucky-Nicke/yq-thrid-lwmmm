@@ -9,6 +9,8 @@ import com.lanxige.util.Result;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -21,18 +23,20 @@ public class SysCategoryController {
     @Autowired
     private SysCategoryService sysCategoryService;
 
+    @PreAuthorize("hasAuthority('bnt.sysCategory.list')")
     @ApiOperation("获取全部分类")
     @GetMapping("/findAll")
     public Result findAll() {
-        List<SysCategory> list = this.sysCategoryService.list();
-        return Result.ok(list);
+        return Result.ok(sysCategoryService.list());
     }
 
+    // 删除
+    @PreAuthorize("hasAuthority('bnt.sysCategory.remove')")
     @ApiOperation("根据id去移除一个分类")
-    // 测试删除
     @DeleteMapping("/removeCategory/{id}")
     public Result removeCategory(@PathVariable Long id) {
         boolean b = this.sysCategoryService.removeById(id);
+
         if (b) {
             return Result.ok();
         } else {
@@ -41,6 +45,7 @@ public class SysCategoryController {
     }
 
     // 分页和条件查询
+    @PreAuthorize("hasAuthority('bnt.sysCategory.list')")
     @ApiOperation("分页和条件查询")
     @GetMapping("/{page}/{limit}")
     public Result findCategoryByPageQuery(@PathVariable Long page,
@@ -48,16 +53,19 @@ public class SysCategoryController {
                                           SysCategoryQueryVo sysCategoryQueryVo) {
         //1.创建分页对象
         IPage<SysCategory> p1 = new Page<>(page, limit);
+
         //2.调用方法
         p1 = this.sysCategoryService.selectPage(p1, sysCategoryQueryVo);
+
         //3.返回
         return Result.ok(p1);
     }
 
     // 添加分类
+    @PreAuthorize("hasAuthority('bnt.sysCategory.add')")
     @ApiOperation("添加分类")
     @PostMapping("/addCategory")
-    public Result addCategory(@RequestBody SysCategory sysCategory) {
+    public Result addCategory(@Validated @RequestBody SysCategory sysCategory) {
         boolean res = this.sysCategoryService.save(sysCategory);
         if (res) {
             return Result.ok();
@@ -68,14 +76,15 @@ public class SysCategoryController {
 
     // 修改
     //1.根据id 去得到当前分类
+    @PreAuthorize("hasAuthority('bnt.sysCategory.update')")
     @ApiOperation("根据id去得到当前分类")
     @GetMapping("/findCategoryById/{id}")
     public Result findCategoryById(@PathVariable Long id) {
-        SysCategory sysCategory = this.sysCategoryService.getById(id);
-        return Result.ok(sysCategory);
+        return Result.ok(sysCategoryService.getById(id));
     }
 
     // 实现修改
+    @PreAuthorize("hasAuthority('bnt.sysCategory.update')")
     @ApiOperation("修改分类")
     @PostMapping("/updateCategory")
     public Result updateCategory(@RequestBody SysCategory sysCategory) {
@@ -88,10 +97,12 @@ public class SysCategoryController {
     }
 
     // 批量删除
+    @PreAuthorize("hasAuthority('bnt.sysCategory.remove')")
     @ApiOperation("批量删除")
     @DeleteMapping("/removeCategoryByIds")
     public Result removeCategoryByIds(@RequestBody List<Long> ids) {
         boolean b = this.sysCategoryService.removeByIds(ids);
+
         if (b) {
             return Result.ok();
         } else {

@@ -28,9 +28,12 @@ public class SysUserController {
     @PreAuthorize("hasAuthority('bnt.sysUser.list')")
     @ApiOperation("分页和条件查询")
     @GetMapping("/{page}/{limit}")
-    public Result selectUserPageByVo(@PathVariable Long page, @PathVariable Long limit, SysUserQueryVo sysUserQueryVo) {
+    public Result selectUserPageByVo(@PathVariable Long page,
+                                     @PathVariable Long limit,
+                                     SysUserQueryVo sysUserQueryVo) {
         IPage<SysUser> iPage = new Page<>(page, limit);
         iPage = this.sysUserService.selectPage(iPage, sysUserQueryVo);
+
         return Result.ok(iPage);
     }
 
@@ -40,6 +43,7 @@ public class SysUserController {
     @PostMapping("/addUser")
     public Result addUser(@Validated @RequestBody SysUser sysUser) {
         boolean b = sysUserService.addUser(sysUser);
+
         if (b) {
             return Result.ok();
         } else {
@@ -52,8 +56,7 @@ public class SysUserController {
     @ApiOperation("根据id查询用户")
     @GetMapping("/findUserById/{id}")
     public Result findUserById(@PathVariable Long id) {
-        SysUser sysUser = this.sysUserService.getById(id);
-        return Result.ok(sysUser);
+        return Result.ok(sysUserService.getById(id));
     }
 
     @PreAuthorize("hasAuthority('bnt.sysUser.update')")
@@ -61,6 +64,7 @@ public class SysUserController {
     @PostMapping("/updateUser")
     public Result updateUser(@Validated @RequestBody SysUser sysUser) {
         boolean b = this.sysUserService.updateById(sysUser);
+
         if (b) {
             return Result.ok();
         } else {
@@ -73,11 +77,11 @@ public class SysUserController {
     @DeleteMapping("/deleteUser/{id}")
     public Result deleteUser(@PathVariable Long id) {
         boolean b = this.sysUserService.removeById(id);
+
         if (b) {
             return Result.ok();
         } else {
             return Result.fail();
-
         }
     }
 
@@ -86,11 +90,11 @@ public class SysUserController {
     @DeleteMapping("/batchDeleteUser")
     public Result batchDeleteUser(@RequestBody List<Long> ids) {
         boolean b = this.sysUserService.removeByIds(ids);
+
         if (b) {
             return Result.ok();
         } else {
             return Result.fail();
-
         }
     }
 
@@ -98,8 +102,13 @@ public class SysUserController {
     @ApiOperation("更改用户状态")
     @GetMapping("/updateStatus/{id}/{status}")
     public Result updateStatus(@PathVariable Long id, @PathVariable Integer status) {
-        this.sysUserService.updateStatusById(id, status);
-        return Result.ok();
+        boolean b = this.sysUserService.updateStatusById(id, status);
+
+        if (b) {
+            return Result.ok();
+        }else {
+            return Result.fail();
+        }
     }
 }
 

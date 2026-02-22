@@ -11,7 +11,14 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @Transactional
-public class SysCategoryServiceImpl extends ServiceImpl<SysCategoryMapper,SysCategory> implements SysCategoryService {
+public class SysCategoryServiceImpl extends ServiceImpl<SysCategoryMapper, SysCategory> implements SysCategoryService {
+    /**
+     * 分页查询
+     *
+     * @param p1                 分页对象
+     * @param sysCategoryQueryVo 查询条件
+     * @return 分页结果
+     */
     @Override
     public IPage<SysCategory> selectPage(IPage<SysCategory> p1, SysCategoryQueryVo sysCategoryQueryVo) {
         return this.baseMapper.selectPage(p1, sysCategoryQueryVo);

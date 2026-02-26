@@ -23,7 +23,6 @@ public class SysCategoryController {
     @Autowired
     private SysCategoryService sysCategoryService;
 
-    @PreAuthorize("hasAuthority('bnt.sysCategory.list')")
     @ApiOperation("获取全部分类")
     @GetMapping("/findAll")
     public Result findAll() {

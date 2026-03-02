@@ -114,7 +114,7 @@ public class SysMovieController {
 
     // 播放视频根据id和播放秘钥
     @OpenLog(title = "影视管理-播放视频",
-            businessType = BusinessType.QUERY,
+            businessType = BusinessType.OTHER,
             requestMethod = "Post")
     @PreAuthorize("hasAuthority('bnt.sysMovie.assignVideo')")
     @ApiOperation("根据id获取播放凭证")

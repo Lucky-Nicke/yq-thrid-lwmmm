@@ -17,7 +17,7 @@ public class SysMovie extends BaseEntity {
 
     private String name;//影视名
 
-    private Integer cid;//所属栏目
+    private String cid;//所属栏目
 
     private String description;//描述
 

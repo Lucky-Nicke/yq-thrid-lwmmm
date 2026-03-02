@@ -3,11 +3,13 @@ package com.lanxige.controller;
 import com.aliyuncs.vod.model.v20170321.GetVideoPlayAuthRequest;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.lanxige.eurm.BusinessType;
 import com.lanxige.model.system.SysMovie;
 import com.lanxige.model.vo.SysMovieQueryVo;
 import com.lanxige.service.SysMovieService;
 import com.lanxige.util.Result;
 import com.lanxige.utils.VodTemplate;
+import com.lanxige.utils.aop.OpenLog;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,7 +37,10 @@ public class SysMovieController {
         return Result.ok(list);
     }
 
-    // 测试删除
+    // 删除
+    @OpenLog(title = "影视管理-删除",
+            businessType = BusinessType.DELETE,
+            requestMethod = "Delete")
     @ApiOperation("根据id去移除一个影视")
     @DeleteMapping("/removeMovie/{id}")
     public Result removeMovie(@PathVariable Long id) {
@@ -58,6 +63,9 @@ public class SysMovieController {
     }
 
     // 添加影视
+    @OpenLog(title = "影视管理-添加",
+            businessType = BusinessType.INSERT,
+            requestMethod = "Post")
     @PostMapping("/addMovie")
     public Result addRole(@RequestBody SysMovie sysMovie) {
         System.out.println("sysMovie = " + sysMovie);
@@ -69,8 +77,7 @@ public class SysMovieController {
         }
     }
 
-    // 修改
-    //1.根据id 去得到当前影视
+    //根据id 去得到当前影视
     @GetMapping("/findMovieById/{id}")
     public Result findMovieById(@PathVariable Long id) {
         SysMovie sysMovie = this.sysMovieService.getById(id);
@@ -78,6 +85,9 @@ public class SysMovieController {
     }
 
     // 实现修改
+    @OpenLog(title = "影视管理-修改",
+            businessType = BusinessType.UPDATE,
+            requestMethod = "Post")
     @PostMapping("/updateMovie")
     public Result updateRole(@RequestBody SysMovie sysMovie) {
         boolean b = this.sysMovieService.updateById(sysMovie);
@@ -89,6 +99,9 @@ public class SysMovieController {
     }
 
     // 批量删除
+    @OpenLog(title = "影视管理-批量删除",
+            businessType = BusinessType.DELETE,
+            requestMethod = "Delete")
     @DeleteMapping("/removeMovieByIds")
     public Result removeMovieByIds(@RequestBody List<Long> ids) {
         boolean b = this.sysMovieService.removeByIds(ids);
@@ -99,7 +112,10 @@ public class SysMovieController {
         }
     }
 
-    // 播放视频   根据id 和 播放秘钥
+    // 播放视频根据id和播放秘钥
+    @OpenLog(title = "影视管理-播放视频",
+            businessType = BusinessType.QUERY,
+            requestMethod = "Post")
     @PreAuthorize("hasAuthority('bnt.sysMovie.assignVideo')")
     @ApiOperation("根据id获取播放凭证")
     @RequestMapping(value = "/getPlayAuth/{id}")

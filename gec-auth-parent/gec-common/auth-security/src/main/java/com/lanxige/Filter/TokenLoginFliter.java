@@ -39,6 +39,10 @@ public class TokenLoginFliter extends UsernamePasswordAuthenticationFilter {
     @Override
     public Authentication attemptAuthentication(HttpServletRequest req, HttpServletResponse res) {
         LoginVo loginVo = new ObjectMapper().readValue(req.getInputStream(), LoginVo.class);
+
+        // 缓存 username，供失败处理使用
+        req.setAttribute("loginUsername", loginVo.getUsername());
+
         Authentication authentication = new UsernamePasswordAuthenticationToken(loginVo.getUsername(), loginVo.getPassword());
         //调用认证管理器：通过getAuthenticationManager().authenticate(authentication)
         //触发认证，认证管理器会调用 UserDetailsService 的 loadUserByUsername 方法
@@ -49,7 +53,7 @@ public class TokenLoginFliter extends UsernamePasswordAuthenticationFilter {
     protected void successfulAuthentication(HttpServletRequest req, HttpServletResponse res, FilterChain chain, Authentication authentication) throws IOException, ServletException {
         CustomUser customUser = (CustomUser) authentication.getPrincipal();
         String token = JwtHelper.createToken(customUser.getSysUser().getId(), customUser.getSysUser().getUsername());
-        sysLoginService.recordLoginLog(customUser.getUsername(),1, IpUtil.getIpAddress(req),"登录成功");
+        sysLoginService.recordLoginLog(customUser.getUsername(), 0, IpUtil.getIpAddress(req), "登录成功");
         redisTemplate.opsForValue().set(customUser.getUsername(), JSON.toJSONString(customUser.getAuthorities()));
         Map<String, Object> map = new HashMap<>();
         map.put("token", token);
@@ -57,11 +61,19 @@ public class TokenLoginFliter extends UsernamePasswordAuthenticationFilter {
     }
 
     @Override
-    protected void unsuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response, AuthenticationException e) throws IOException, ServletException {
-        if (e.getCause() instanceof RuntimeException) {
-            ResponseUtil.out(response, Result.build(null, 204, e.getMessage()));
-        } else {
-            ResponseUtil.out(response, Result.build(null, ResultCodeEnum.LOGIN_MOBLE_ERROR));
+    protected void unsuccessfulAuthentication(HttpServletRequest request,
+                                              HttpServletResponse response,
+                                              AuthenticationException e) throws IOException {
+
+        // 从 request 属性里取 username
+        String username = (String) request.getAttribute("loginUsername");
+        if (username == null) {
+            username = "未知用户";
         }
+
+        // 保存登录失败日志
+        sysLoginService.recordLoginLog(username, 1, IpUtil.getIpAddress(request), e.getMessage());
+
+        ResponseUtil.out(response, Result.build(null, 204, e.getMessage()));
     }
 }

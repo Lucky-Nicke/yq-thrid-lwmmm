@@ -14,6 +14,7 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -52,19 +53,49 @@ public class TokenAuthenticationFliter extends OncePerRequestFilter {
     }
 
     private UsernamePasswordAuthenticationToken getAuthentication(HttpServletRequest request) {
+
         String token = request.getHeader("token");
-        logger.info("token:" + token);
-        if (!StringUtils.isNullOrEmpty(token)) {
-            String username = JwtHelper.getUsername(token);
-            logger.info("username:" + username);
-            if (!StringUtils.isNullOrEmpty(username)) {
-                String authoritiesString = (String) redisTemplate.opsForValue().get(username);
-                List<Map> mapList = JSON.parseArray(authoritiesString, Map.class);
-                List<SimpleGrantedAuthority> authorities = new ArrayList<>();
-                for (Map map : mapList) {
-                    authorities.add(new SimpleGrantedAuthority((String) map.get("authority")));
+
+        // 如果 header 没有，从 cookie 里拿
+        if (StringUtils.isNullOrEmpty(token)) {
+            if (request.getCookies() != null) {
+                for (Cookie cookie : request.getCookies()) {
+                    if ("vue_admin_template_token".equals(cookie.getName())) {
+                        token = cookie.getValue();
+                    }
                 }
-                return new UsernamePasswordAuthenticationToken(username, null, authorities);
+            }
+        }
+
+        logger.info("最终token: " + token);
+
+        if (!StringUtils.isNullOrEmpty(token)) {
+
+            String username = JwtHelper.getUsername(token);
+            logger.info("username: " + username);
+
+            if (!StringUtils.isNullOrEmpty(username)) {
+
+                String authoritiesString =
+                        (String) redisTemplate.opsForValue().get(username);
+
+                List<Map> mapList = JSON.parseArray(authoritiesString, Map.class);
+
+                List<SimpleGrantedAuthority> authorities = new ArrayList<>();
+
+                for (Map map : mapList) {
+                    authorities.add(
+                            new SimpleGrantedAuthority(
+                                    (String) map.get("authority")
+                            )
+                    );
+                }
+
+                return new UsernamePasswordAuthenticationToken(
+                        username,
+                        null,
+                        authorities
+                );
             }
         }
         return null;

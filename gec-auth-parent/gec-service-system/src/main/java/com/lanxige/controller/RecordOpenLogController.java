@@ -2,10 +2,12 @@ package com.lanxige.controller;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.lanxige.eurm.BusinessType;
 import com.lanxige.model.system.SysOpenLog;
 import com.lanxige.model.vo.SysOperLogQueryVo;
 import com.lanxige.service.SysOpenLogService;
 import com.lanxige.util.Result;
+import com.lanxige.utils.aop.OpenLog;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,6 +31,9 @@ public class RecordOpenLogController {
         return Result.ok(iPage);
     }
 
+    @OpenLog(title = "操作日志管理-删除",
+            businessType = BusinessType.DELETE,
+            requestMethod = "Delete")
     @ApiOperation("删除打开菜单记录")
     @PostMapping("/del/{id}")
     public Result getRecordLog(@PathVariable Long id){
@@ -41,6 +46,9 @@ public class RecordOpenLogController {
         }
     }
 
+    @OpenLog(title = "操作日志管理-批量删除",
+            businessType = BusinessType.DELETE,
+            requestMethod = "Delete")
     @ApiOperation("批量删除打开菜单记录")
     @PostMapping("/batchdel/{ids}")
     public Result getRecordLog(@PathVariable List<Long> ids){

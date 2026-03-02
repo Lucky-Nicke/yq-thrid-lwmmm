@@ -2,10 +2,12 @@ package com.lanxige.controller;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.lanxige.eurm.BusinessType;
 import com.lanxige.model.system.SysCategory;
 import com.lanxige.model.vo.SysCategoryQueryVo;
 import com.lanxige.service.SysCategoryService;
 import com.lanxige.util.Result;
+import com.lanxige.utils.aop.OpenLog;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,6 +32,9 @@ public class SysCategoryController {
     }
 
     // 删除
+    @OpenLog(title = "影视分类-单个删除",
+            businessType = BusinessType.DELETE,
+            requestMethod = "Delete")
     @PreAuthorize("hasAuthority('bnt.sysCategory.remove')")
     @ApiOperation("根据id去移除一个分类")
     @DeleteMapping("/removeCategory/{id}")
@@ -61,6 +66,9 @@ public class SysCategoryController {
     }
 
     // 添加分类
+    @OpenLog(title = "影视分类-添加",
+            businessType = BusinessType.INSERT,
+            requestMethod = "Post")
     @PreAuthorize("hasAuthority('bnt.sysCategory.add')")
     @ApiOperation("添加分类")
     @PostMapping("/addCategory")
@@ -73,8 +81,7 @@ public class SysCategoryController {
         }
     }
 
-    // 修改
-    //1.根据id 去得到当前分类
+    // 根据id去得到当前分类
     @PreAuthorize("hasAuthority('bnt.sysCategory.update')")
     @ApiOperation("根据id去得到当前分类")
     @GetMapping("/findCategoryById/{id}")
@@ -83,6 +90,9 @@ public class SysCategoryController {
     }
 
     // 实现修改
+    @OpenLog(title = "影视分类-修改",
+            businessType = BusinessType.UPDATE,
+            requestMethod = "Post")
     @PreAuthorize("hasAuthority('bnt.sysCategory.update')")
     @ApiOperation("修改分类")
     @PostMapping("/updateCategory")
@@ -96,6 +106,9 @@ public class SysCategoryController {
     }
 
     // 批量删除
+    @OpenLog(title = "影视分类-批量删除",
+            businessType = BusinessType.DELETE,
+            requestMethod = "Delete")
     @PreAuthorize("hasAuthority('bnt.sysCategory.remove')")
     @ApiOperation("批量删除")
     @DeleteMapping("/removeCategoryByIds")

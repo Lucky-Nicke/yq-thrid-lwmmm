@@ -3,10 +3,12 @@ package com.lanxige.controller;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.lanxige.eurm.BusinessType;
 import com.lanxige.model.system.SysUser;
 import com.lanxige.model.vo.SysUserQueryVo;
 import com.lanxige.service.SysUserService;
 import com.lanxige.util.Result;
+import com.lanxige.utils.aop.OpenLog;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,6 +40,9 @@ public class SysUserController {
     }
 
     // 添加用户
+    @OpenLog(title = "用户管理-添加",
+            businessType = BusinessType.INSERT,
+            requestMethod = "Post")
     @PreAuthorize("hasAuthority('bnt.sysUser.add')")
     @ApiOperation("添加用户")
     @PostMapping("/addUser")
@@ -59,6 +64,10 @@ public class SysUserController {
         return Result.ok(sysUserService.getById(id));
     }
 
+    // 修改用户
+    @OpenLog(title = "用户管理-修改",
+            businessType = BusinessType.UPDATE,
+            requestMethod = "Post")
     @PreAuthorize("hasAuthority('bnt.sysUser.update')")
     @ApiOperation("修改用户信息")
     @PostMapping("/updateUser")
@@ -72,6 +81,10 @@ public class SysUserController {
         }
     }
 
+    // 删除用户
+    @OpenLog(title = "用户管理-删除",
+            businessType = BusinessType.DELETE,
+            requestMethod = "Delete")
     @PreAuthorize("hasAuthority('bnt.sysUser.remove')")
     @ApiOperation("删除用户")
     @DeleteMapping("/deleteUser/{id}")
@@ -85,6 +98,10 @@ public class SysUserController {
         }
     }
 
+    // 批量删除用户
+    @OpenLog(title = "用户管理-批量删除",
+            businessType = BusinessType.DELETE,
+            requestMethod = "Delete")
     @PreAuthorize("hasAuthority('bnt.sysUser.remove')")
     @ApiOperation("批量删除用户")
     @DeleteMapping("/batchDeleteUser")
@@ -98,6 +115,10 @@ public class SysUserController {
         }
     }
 
+    // 更改用户状态
+    @OpenLog(title = "用户管理-更改用户状态",
+            businessType = BusinessType.UPDATE,
+            requestMethod = "Get")
     @PreAuthorize("hasAuthority('bnt.sysUser.update')")
     @ApiOperation("更改用户状态")
     @GetMapping("/updateStatus/{id}/{status}")

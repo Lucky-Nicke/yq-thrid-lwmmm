@@ -31,7 +31,7 @@
     <!--  查询用户趋势  -->
     <select id="selectUserTrend" resultType="com.lanxige.model.vo.UserTrendVo">
         SELECT
-            DATE (create_time) AS day, COUNT (*) AS count
+            DATE (create_time) AS day, COUNT(*) AS count
         FROM sys_user
         WHERE
             is_deleted = 0

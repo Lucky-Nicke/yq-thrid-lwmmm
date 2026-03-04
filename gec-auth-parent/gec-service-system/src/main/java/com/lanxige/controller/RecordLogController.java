@@ -11,6 +11,7 @@ import com.lanxige.utils.aop.OpenLog;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -23,6 +24,7 @@ public class RecordLogController {
     @Autowired
     private SysLoginServiceImpl sysLoginService;
 
+    @PreAuthorize("hasAuthority('bnt.sysLoginLog.list')")
     @ApiOperation("查询登录记录log")
     @GetMapping("/{page}/{limit}")
     public Result getRecordLog(@PathVariable Long page, @PathVariable Long limit, SysLoginLogQueryVo sysLoginLogQueryVo){
@@ -31,6 +33,7 @@ public class RecordLogController {
         return Result.ok(iPage);
     }
 
+    @PreAuthorize("hasAuthority('bnt.sysLoginLog.delete')")
     @OpenLog(title = "登录日志管理-删除",
             businessType = BusinessType.DELETE,
             requestMethod = "Delete")
@@ -46,6 +49,7 @@ public class RecordLogController {
         }
     }
 
+    @PreAuthorize("hasAuthority('bnt.sysLoginLog.delete')")
     @OpenLog(title = "登录日志管理-批量删除",
             businessType = BusinessType.DELETE,
             requestMethod = "Delete")

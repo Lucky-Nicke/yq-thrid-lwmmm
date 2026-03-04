@@ -1,6 +1,6 @@
 package com.lanxige;
 
-import com.lanxige.mapper.SysRoleMapper;
+import com.lanxige.mapper.system.SysRoleMapper;
 import com.lanxige.model.system.SysRole;
 import org.junit.Test;
 import org.junit.runner.RunWith;

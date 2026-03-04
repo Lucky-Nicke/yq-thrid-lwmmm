@@ -2,7 +2,7 @@
 <!DOCTYPE mapper
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.lanxige.mapper.SysMovieMapper">
+<mapper namespace="com.lanxige.mapper.system.SysMovieMapper">
 
 
     <resultMap id="MovieMap" type="com.lanxige.model.system.SysMovie" autoMapping="true">
@@ -10,11 +10,13 @@
 
     <!-- 用于select查询公用抽取的列 -->
     <sql id="columns">
-        id,`name`,cid,description,keyword,director,actor,image,type,url,play_id,create_time,update_time,is_deleted
+        id
+        ,`name`,cid,description,keyword,director,image,type,url,play_id,create_time,update_time,is_deleted
     </sql>
 
     <select id="selectPage" resultMap="MovieMap">
-        select <include refid="columns" />
+        select
+        <include refid="columns"/>
         from sys_movie
         <where>
             <if test="vo.name != null and vo.name != ''">
@@ -28,5 +30,21 @@
         order by id desc
     </select>
 
+    <!--  查询电影趋势  -->
+    <select id="selectMovieTrend" resultType="com.lanxige.model.vo.DayCountVo">
+        SELECT DATE (create_time) AS day, COUNT(*) AS count
+        FROM sys_movie
+        WHERE is_deleted = 0
+          AND create_time >= DATE_SUB(CURDATE()
+            , INTERVAL 6 DAY)
+        GROUP BY DATE (create_time);
+    </select>
+
+    <!--  查询电影总数  -->
+    <select id="selectTotalMovieCount" resultType="java.lang.Integer">
+        SELECT COUNT(*)
+        FROM sys_movie
+        WHERE is_deleted = 0;
+    </select>
 
 </mapper>

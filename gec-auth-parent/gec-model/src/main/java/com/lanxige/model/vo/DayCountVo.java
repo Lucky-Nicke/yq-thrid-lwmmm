@@ -8,7 +8,7 @@ import java.time.LocalDate;
  * 用户趋势统计
  */
 @Data
-public class UserTrendVo {
+public class DayCountVo {
     // 日期
     private LocalDate day;
 

@@ -2,7 +2,7 @@ package com.lanxige.service.impl;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.lanxige.mapper.SysCategoryMapper;
+import com.lanxige.mapper.system.SysCategoryMapper;
 import com.lanxige.model.system.SysCategory;
 import com.lanxige.model.vo.SysCategoryQueryVo;
 import com.lanxige.service.SysCategoryService;

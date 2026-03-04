@@ -1,10 +1,10 @@
-package com.lanxige.mapper;
+package com.lanxige.mapper.system;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.lanxige.model.system.SysUser;
 import com.lanxige.model.vo.SysUserQueryVo;
-import com.lanxige.model.vo.UserTrendVo;
+import com.lanxige.model.vo.DayCountVo;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
@@ -29,7 +29,7 @@ public interface SysUserMapper extends BaseMapper<SysUser> {
      *
      * @return 用户数据
      */
-    List<UserTrendVo> selectUserTrend();
+    List<DayCountVo> selectUserTrend();
 
     /**
      * 查询用户总数

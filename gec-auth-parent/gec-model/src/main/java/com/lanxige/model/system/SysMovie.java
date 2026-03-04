@@ -21,11 +21,7 @@ public class SysMovie extends BaseEntity {
 
     private String description;//描述
 
-    private String keyword;//搜索关键字
-
     private String director;//导演
-
-    private String actor;//演员
 
     private String image;//缩略图
 

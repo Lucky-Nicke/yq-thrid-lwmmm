@@ -5,7 +5,7 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.StringUtils;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.lanxige.Req.ChangePwdReq;
-import com.lanxige.mapper.SysUserMapper;
+import com.lanxige.mapper.system.SysUserMapper;
 import com.lanxige.model.system.SysUser;
 import com.lanxige.model.vo.RouterVo;
 import com.lanxige.model.vo.SysUserQueryVo;

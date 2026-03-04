@@ -8,7 +8,7 @@ import java.util.List;
  * 用户趋势响应类
  */
 @Data
-public class UserTrendRsp {
+public class DataTrendRsp {
 
     // 最近7天数据
     private List<Integer> actualData;

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.lanxige.mapper.video.VideoStatMapper">
+
+    <resultMap id="RoleMap" type="com.lanxige.model.video.VideoStat" autoMapping="true">
+    </resultMap>
+
+    <!--  查询播放趋势  -->
+    <select id="selectPlayTrend" resultType="com.lanxige.model.vo.DayCountVo">
+        SELECT DATE (update_time) AS day, SUM(play_count) AS count
+        FROM video_stat
+        WHERE update_time >= DATE_SUB(CURDATE(), INTERVAL 6 DAY)
+        GROUP BY DATE (update_time);
+    </select>
+
+    <!--  查询总播放量  -->
+    <select id="selectTotalPlayCount" resultType="java.lang.Integer">
+        SELECT SUM(play_count)
+        FROM video_stat;
+    </select>
+
+</mapper>

@@ -7,5 +7,10 @@ import com.lanxige.model.vo.SysMovieQueryVo;
 
 public interface SysMovieService extends IService<SysMovie> {
     IPage<SysMovie> selectPage(IPage<SysMovie> p1, SysMovieQueryVo sysMovieQueryVo);
+
+    /**
+     * 保存电影信息
+     */
+    boolean saveMovieInfo(SysMovie sysMovie);
 }
 

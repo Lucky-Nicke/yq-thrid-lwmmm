@@ -2,8 +2,8 @@ package com.lanxige.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.lanxige.mapper.SysMenuMapper;
-import com.lanxige.mapper.SysRoleMenuMapper;
+import com.lanxige.mapper.system.SysMenuMapper;
+import com.lanxige.mapper.system.SysRoleMenuMapper;
 import com.lanxige.model.system.SysMenu;
 import com.lanxige.model.system.SysRoleMenu;
 import com.lanxige.model.vo.AssginMenuVo;

@@ -68,8 +68,8 @@ public class SysMovieController {
             requestMethod = "Post")
     @PostMapping("/addMovie")
     public Result addRole(@RequestBody SysMovie sysMovie) {
-        System.out.println("sysMovie = " + sysMovie);
-        boolean res = this.sysMovieService.save(sysMovie);
+        boolean res = this.sysMovieService.saveMovieInfo(sysMovie);
+
         if (res) {
             return Result.ok();
         } else {

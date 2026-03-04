@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.lanxige.mapper.video.VideoDanmuMapper">
+
+    <resultMap id="RoleMap" type="com.lanxige.model.video.VideoDanmaku" autoMapping="true">
+    </resultMap>
+
+    <!--  查询弹幕趋势  -->
+    <select id="selectDanmakuTrend" resultType="com.lanxige.model.vo.DayCountVo">
+        SELECT DATE (create_time) AS day, COUNT(*) AS count
+        FROM video_danmaku
+        WHERE status = 1
+          AND create_time >= DATE_SUB(CURDATE()
+            , INTERVAL 6 DAY)
+        GROUP BY DATE (create_time);
+    </select>
+
+    <!--  查询弹幕总数  -->
+    <select id="selectTotalDanmakuCount" resultType="java.lang.Integer">
+        SELECT COUNT(*)
+        FROM video_danmaku
+        WHERE status = 1;
+    </select>
+
+</mapper>

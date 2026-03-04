@@ -1,4 +1,4 @@
-package com.lanxige.mapper;
+package com.lanxige.mapper.system;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.lanxige.model.system.SysRoleMenu;

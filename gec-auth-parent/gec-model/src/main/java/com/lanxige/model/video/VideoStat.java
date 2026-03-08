@@ -20,4 +20,9 @@ public class VideoStat extends BaseEntity {
      * 弹幕量
      */
     private int playCount;
+
+    /**
+     * 点赞数
+     */
+    private int likeCount;
 }

@@ -30,12 +30,6 @@ public class VideoDanmaku extends BaseEntity {
     private Long userId;
 
     /**
-     * 阿里云VOD视频ID
-     */
-    @TableField("vod_video_id")
-    private String vodVideoId;
-
-    /**
      * 弹幕内容
      */
     @TableField("content")

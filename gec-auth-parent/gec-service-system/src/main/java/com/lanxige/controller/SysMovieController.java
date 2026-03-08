@@ -1,6 +1,5 @@
 package com.lanxige.controller;
 
-import com.aliyuncs.vod.model.v20170321.GetVideoPlayAuthRequest;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.lanxige.eurm.BusinessType;
@@ -8,12 +7,10 @@ import com.lanxige.model.system.SysMovie;
 import com.lanxige.model.vo.SysMovieQueryVo;
 import com.lanxige.service.SysMovieService;
 import com.lanxige.util.Result;
-import com.lanxige.utils.VodTemplate;
 import com.lanxige.utils.aop.OpenLog;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
@@ -26,9 +23,6 @@ import java.util.List;
 public class SysMovieController {
     @Autowired
     private SysMovieService sysMovieService;
-
-    @Autowired
-    private VodTemplate vodTemplate;
 
     @ApiOperation("获取全部影视列表")
     @GetMapping("/findAll")
@@ -44,7 +38,7 @@ public class SysMovieController {
     @ApiOperation("根据id去移除一个影视")
     @DeleteMapping("/removeMovie/{id}")
     public Result removeMovie(@PathVariable Long id) {
-        boolean b = this.sysMovieService.removeById(id);
+        boolean b = sysMovieService.deleteMovie(id);
         if (b) {
             return Result.ok();
         } else {
@@ -104,7 +98,7 @@ public class SysMovieController {
             requestMethod = "Delete")
     @DeleteMapping("/removeMovieByIds")
     public Result removeMovieByIds(@RequestBody List<Long> ids) {
-        boolean b = this.sysMovieService.removeByIds(ids);
+        boolean b = sysMovieService.deleteMovieBatch(ids);
         if (b) {
             return Result.ok();
         } else {
@@ -116,27 +110,10 @@ public class SysMovieController {
     @OpenLog(title = "影视管理-播放视频",
             businessType = BusinessType.OTHER,
             requestMethod = "Post")
-    @PreAuthorize("hasAuthority('bnt.sysMovie.assignVideo')")
     @ApiOperation("根据id获取播放凭证")
     @RequestMapping(value = "/getPlayAuth/{id}")
-    public Result playVideoByAuth(@PathVariable Long id) throws Exception {
-        //1.根据id 获取 到 SysMovie
-        SysMovie sysMovie = this.sysMovieService.getById(id);
-        //2. 从  SysMovie 中获取到 image  playId  Auth
-        String image = sysMovie.getImage();
-
-        String playId = sysMovie.getPlayId();
-        System.out.println("playId = " + playId);
-        // 根据playId 去阿里云服务器获取播放秘钥
-        GetVideoPlayAuthRequest request = new GetVideoPlayAuthRequest();
-        request.setVideoId(playId);
-        String playAuth = this.vodTemplate.getVideoPlayAuth(playId).getPlayAuth();
-        // 封装map 集合
-        HashMap<String, Object> map = new HashMap<>();
-        // 分别封装三个参数  参数的key 要和前端对应
-        map.put("image", image);
-        map.put("playId", playId);
-        map.put("playAuth", playAuth);
+    public Result playVideoByAuth(@PathVariable Long id) {
+        HashMap<String, Object> map = sysMovieService.getMovieId(id);
         return Result.ok(map);
     }
 }

@@ -1,6 +1,7 @@
 package com.lanxige.service;
 
 import com.lanxige.Rsp.DataTrendRsp;
+import com.lanxige.Rsp.VideoDetailRsp;
 
 public interface SysDateService {
     /**
@@ -30,4 +31,11 @@ public interface SysDateService {
      * @return 角色数据
      */
     DataTrendRsp getMovieDanmaku();
+
+    /**
+     * 查询视频详情
+     * @param id
+     * @return
+     */
+    VideoDetailRsp getSingelMovieDetail(String id);
 }

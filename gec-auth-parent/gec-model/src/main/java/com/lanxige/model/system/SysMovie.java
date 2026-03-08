@@ -25,10 +25,6 @@ public class SysMovie extends BaseEntity {
 
     private String image;//缩略图
 
-    private String type;//视频类型:1.免费视频  2.付费视频
-
-    private String url;//播放url
-
     private String playId;//播放id
 
     @TableField(exist = false)//不存储到数据库,仅仅用于前台数据展示

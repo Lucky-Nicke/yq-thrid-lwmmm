@@ -1,14 +1,12 @@
 package com.lanxige.controller;
 
+import com.lanxige.Rsp.VideoDetailRsp;
 import com.lanxige.service.SysDateService;
 import com.lanxige.util.Result;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @Api(tags = "数据管理控制器")
@@ -40,5 +38,13 @@ public class SysDataController {
     @GetMapping("/movieDanmaku")
     public Result selectmovieDanmaku() {
         return Result.ok(sysDateService.getMovieDanmaku());
+    }
+
+    @ApiOperation("查询视频详情")
+    @GetMapping("/singelMovieDetail")
+    public Result getMovieListInfo(@RequestParam String id) {
+        VideoDetailRsp rsp = sysDateService.getSingelMovieDetail(id);
+
+        return Result.ok(rsp);
     }
 }

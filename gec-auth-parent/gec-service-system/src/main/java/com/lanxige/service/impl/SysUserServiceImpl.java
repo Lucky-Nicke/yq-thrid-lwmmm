@@ -91,8 +91,6 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
         //当前权限控制使用不到，我们暂时忽略
         map.put("name", sysUser.getName());
         map.put("avatar", sysUser.getHeadUrl());
-        map.put("roles", "[admin]");
-
 
         map.put("buttons", permsList);
         map.put("routers", routerVoList);
@@ -186,5 +184,32 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
         sysUser.setHeadUrl("http://file.lanxige.club/img/yq-third-lwmmm/Default/identicon.png");
 
         return save(sysUser);
+    }
+
+    /**
+     * 获取用户信息
+     *
+     * @param username 用户名
+     * @return 用户信息
+     */
+    @Override
+    public Map<String, Object> getUserLessInfo(String username) {
+
+        Map<String, Object> map = new HashMap<>();
+        SysUser sysUser = this.getUserInfoUserName(username);
+
+        //当前权限控制使用不到，我们暂时忽略
+        map.put("name", sysUser.getName());
+        map.put("avatar", sysUser.getHeadUrl());
+        map.put("desc", sysUser.getDescription());
+        map.put("status", sysUser.getStatus());
+        map.put("roleList", sysUser.getRoleList());
+        map.put("phone", sysUser.getPhone());
+        map.put("username", sysUser.getUsername());
+        map.put("creaT", sysUser.getCreateTime());
+        map.put("updT", sysUser.getUpdateTime());
+        map.put("id", sysUser.getId());
+
+        return map;
     }
 }

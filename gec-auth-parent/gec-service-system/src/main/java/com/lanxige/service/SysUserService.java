@@ -58,4 +58,12 @@ public interface SysUserService extends IService<SysUser> {
      * @return 添加结果
      */
     boolean addUser(SysUser sysUser);
+
+    /**
+     * 获取用户信息
+     *
+     * @param username 用户名
+     * @return 用户信息
+     */
+    Map<String, Object> getUserLessInfo(String username);
 }

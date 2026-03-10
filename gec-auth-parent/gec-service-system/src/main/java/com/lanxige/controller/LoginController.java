@@ -29,7 +29,7 @@ public class LoginController {
         //使用springSecurity进行认证
     }
 
-    @ApiOperation("查询用户信息")
+    @ApiOperation("查询用户菜单信息")
     @GetMapping(value = "/info")
     public Result info(HttpServletRequest request) {
         String token = request.getHeader("token");

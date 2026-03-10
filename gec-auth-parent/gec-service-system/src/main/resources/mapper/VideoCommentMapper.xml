@@ -8,4 +8,14 @@
     <resultMap id="RoleMap" type="com.lanxige.model.video.VideoComment" autoMapping="true">
     </resultMap>
 
+    <!--  根据父级id查询评论数量  -->
+    <update id="decreaseReplyCount">
+        UPDATE video_comment
+        SET reply_count = CASE
+                              WHEN reply_count > 0 THEN reply_count - 1
+                              ELSE 0
+            END
+        WHERE id = #{parentId}
+    </update>
+
 </mapper>

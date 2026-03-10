@@ -9,6 +9,10 @@ import lombok.Data;
  */
 @Data
 public class VideoDanmakuDTO extends BaseEntity {
+    /**
+     * 弹幕ID
+     */
+    private Long id;
 
     /**
      * 弹幕内容

@@ -38,4 +38,20 @@ public interface SysDateService {
      * @return
      */
     VideoDetailRsp getSingelMovieDetail(String id);
+
+    /**
+     * 删除弹幕
+     *
+     * @param danmakuId 弹幕id
+     * @return 删除结果
+     */
+    boolean removeDanmaku(String danmakuId);
+
+    /**
+     * 删除评论
+     *
+     * @param commentId 评论id
+     * @return 删除结果
+     */
+    boolean removeComment(String commentId);
 }

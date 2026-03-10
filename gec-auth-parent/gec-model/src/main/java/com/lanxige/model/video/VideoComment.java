@@ -26,7 +26,7 @@ public class VideoComment implements Serializable {
     /**
      * 评论用户ID
      */
-    private String userId;
+    private Long userId;
 
     /**
      * 父评论ID

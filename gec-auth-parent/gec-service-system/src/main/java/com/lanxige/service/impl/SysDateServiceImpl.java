@@ -1,6 +1,7 @@
 package com.lanxige.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.lanxige.Dto.VideoCommentDTO;
 import com.lanxige.Dto.VideoDanmakuDTO;
 import com.lanxige.Rsp.DataTrendRsp;
@@ -20,6 +21,7 @@ import com.lanxige.service.SysDateService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -225,6 +227,9 @@ public class SysDateServiceImpl implements SysDateService {
 
             VideoDanmakuDTO dto = new VideoDanmakuDTO();
 
+            dto.setUpdateTime(d.getUpdateTime());
+            dto.setIsDeleted(d.getIsDeleted());
+            dto.setId(d.getId());
             dto.setContent(d.getContent());
             dto.setPlayTime(d.getPlayTime());
             dto.setColor(d.getColor());
@@ -302,5 +307,75 @@ public class SysDateServiceImpl implements SysDateService {
         rsp.setCommentCount(allComments.size());
 
         return rsp;
+    }
+
+    /**
+     * 删除弹幕
+     *
+     * @param danmakuId 弹幕id
+     * @return 删除结果
+     */
+    @Override
+    public boolean removeDanmaku(String danmakuId) {
+        Long id = Long.valueOf(danmakuId);
+
+        VideoDanmaku danmaku = videoDanmuMapper.selectById(id);
+        if (danmaku == null) {
+            return false;
+        }
+
+        return videoDanmuMapper.deleteById(Long.valueOf(danmakuId)) > 0;
+    }
+
+    /**
+     * 删除评论
+     *
+     * @param commentId 评论id
+     * @return 删除结果
+     */
+    @Override
+    @Transactional
+    public boolean removeComment(String commentId) {
+
+        VideoComment comment = videoCommentMapper.selectById(commentId);
+        if (comment == null) {
+            return false;
+        }
+
+        // 获取原始的父ID和根ID，用于后续更新计数
+        Long originalParentId = comment.getParentId();
+        Long originalRootId = comment.getRootId(); // 假设实体中有此字段，如果没有则需查询确认
+
+        // 对于根评论：将自身、其所有子评论和楼中楼的 is_deleted 都置为 1
+        if (originalParentId == null) {
+            // 删除根评论及其所有后代评论
+            // 通过 root_id 或 parent_id 找到并更新所有相关子评论
+            UpdateWrapper<VideoComment> updateWrapper = new UpdateWrapper<>();
+            updateWrapper
+                    .eq("id", commentId)           // 删除自己
+                    .or()
+                    .eq("root_id", commentId)       // 删除所有以该评论为根的子评论
+                    .or()
+                    .eq("parent_id", commentId)     // 删除所有直接回复该评论的子评论 (作为备选，以防root_id没覆盖全)
+                    .set("is_deleted", 1);
+
+            int updatedRows = videoCommentMapper.update(null, updateWrapper);
+            // 可以根据 updatedRows 判断是否成功，但通常返回true表示操作执行成功
+            return updatedRows > 0;
+        } else {
+            // 对于非根评论（包括楼中楼），只删除自己
+            UpdateWrapper<VideoComment> updateWrapper = new UpdateWrapper<>();
+            updateWrapper.eq("id", commentId)
+                    .set("is_deleted", 1);
+
+            int updatedRows = videoCommentMapper.update(null, updateWrapper);
+
+            if (updatedRows > 0) {
+                // 如果删除成功，再更新其父评论的回复数
+                videoCommentMapper.decreaseReplyCount(originalParentId);
+            }
+
+            return updatedRows > 0;
+        }
     }
 }

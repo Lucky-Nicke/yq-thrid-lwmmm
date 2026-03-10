@@ -47,4 +47,28 @@ public class SysDataController {
 
         return Result.ok(rsp);
     }
+
+    @ApiOperation("删除弹幕")
+    @DeleteMapping("/deleteDanmaku")
+    public Result removeDanmaku(@RequestParam String danmakuId) {
+        boolean rsp = sysDateService.removeDanmaku(danmakuId);
+
+        if (rsp){
+            return Result.ok(rsp);
+        }else {
+            return Result.fail("删除失败");
+        }
+    }
+
+    @ApiOperation("删除评论")
+    @DeleteMapping("/deleteComment")
+    public Result removeComment(@RequestParam String commentId) {
+        boolean rsp = sysDateService.removeComment(commentId);
+
+        if (rsp){
+            return Result.ok(rsp);
+        }else {
+            return Result.fail("删除失败");
+        }
+    }
 }

@@ -1,11 +1,16 @@
 package com.lanxige.service.impl;
 
 import com.aliyuncs.vod.model.v20170321.GetVideoPlayAuthRequest;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.lanxige.mapper.system.SysMovieMapper;
+import com.lanxige.mapper.video.VideoCommentMapper;
+import com.lanxige.mapper.video.VideoDanmuMapper;
 import com.lanxige.mapper.video.VideoStatMapper;
 import com.lanxige.model.system.SysMovie;
+import com.lanxige.model.video.VideoComment;
+import com.lanxige.model.video.VideoDanmaku;
 import com.lanxige.model.video.VideoStat;
 import com.lanxige.model.vo.SysMovieQueryVo;
 import com.lanxige.service.SysMovieService;
@@ -25,6 +30,12 @@ public class SysMovieServiceImpl extends ServiceImpl<SysMovieMapper, SysMovie> i
 
     @Autowired
     private VodTemplate vodTemplate;
+
+    @Autowired
+    private VideoDanmuMapper videoDanmuMapper;
+
+    @Autowired
+    private VideoCommentMapper videoCommentMapper;
 
     @Override
     public IPage<SysMovie> selectPage(IPage<SysMovie> p1, SysMovieQueryVo sysMovieQueryVo) {
@@ -89,9 +100,26 @@ public class SysMovieServiceImpl extends ServiceImpl<SysMovieMapper, SysMovie> i
     @Override
     public boolean deleteMovie(Long id) {
         boolean b = this.removeById(id);
-        log.info("删除视频成功{}", b);
+        log.info("删除视频成功 {}", b);
 
-        //todo 删除视频的评论、弹幕、播放量
+        if (!b) {
+            return false;
+        }
+
+        // 删除弹幕
+        LambdaQueryWrapper<VideoDanmaku> danmakuWrapper = new LambdaQueryWrapper<>();
+        danmakuWrapper.eq(VideoDanmaku::getVideoId, id);
+        videoDanmuMapper.delete(danmakuWrapper);
+
+        // 删除统计
+        LambdaQueryWrapper<VideoStat> statWrapper = new LambdaQueryWrapper<>();
+        statWrapper.eq(VideoStat::getVideoId, id);
+        videoStatMapper.delete(statWrapper);
+
+        // 删除评论
+        LambdaQueryWrapper<VideoComment> commentWrapper = new LambdaQueryWrapper<>();
+        commentWrapper.eq(VideoComment::getVideoId, id);
+        videoCommentMapper.delete(commentWrapper);
 
         return b;
     }
@@ -101,7 +129,34 @@ public class SysMovieServiceImpl extends ServiceImpl<SysMovieMapper, SysMovie> i
         boolean b = this.removeByIds(ids);
         log.info("删除视频成功{}", b);
 
-        //todo 删除视频的评论、弹幕、播放量
+        // 删除弹幕
+        LambdaQueryWrapper<VideoDanmaku> danmakuWrapper = new LambdaQueryWrapper<>();
+        danmakuWrapper.in(VideoDanmaku::getVideoId, ids);
+        videoDanmuMapper.delete(danmakuWrapper);
+
+        // 删除统计
+        LambdaQueryWrapper<VideoStat> statWrapper = new LambdaQueryWrapper<>();
+        statWrapper.in(VideoStat::getVideoId, ids);
+        videoStatMapper.delete(statWrapper);
+
+        // 删除评论
+        LambdaQueryWrapper<VideoComment> commentWrapper = new LambdaQueryWrapper<>();
+        commentWrapper.in(VideoComment::getVideoId, ids);
+        videoCommentMapper.delete(commentWrapper);
+
+        return b;
+    }
+
+    /**
+     * 修改电影信息
+     *
+     * @param sysMovie 电影信息
+     * @return 修改结果
+     */
+    @Override
+    public boolean updateMovieInfo(SysMovie sysMovie) {
+        boolean b = this.updateById(sysMovie);
+        log.info("修改视频成功{}", b);
 
         return b;
     }

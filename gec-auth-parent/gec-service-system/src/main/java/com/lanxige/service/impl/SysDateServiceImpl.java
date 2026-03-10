@@ -5,6 +5,8 @@ import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.lanxige.Dto.VideoCommentDTO;
 import com.lanxige.Dto.VideoDanmakuDTO;
 import com.lanxige.Rsp.DataTrendRsp;
+import com.lanxige.Rsp.HotMovieRsp;
+import com.lanxige.Rsp.NewCommentRsp;
 import com.lanxige.Rsp.VideoDetailRsp;
 import com.lanxige.mapper.system.SysMovieMapper;
 import com.lanxige.mapper.system.SysUserMapper;
@@ -18,12 +20,14 @@ import com.lanxige.model.video.VideoDanmaku;
 import com.lanxige.model.video.VideoStat;
 import com.lanxige.model.vo.DayCountVo;
 import com.lanxige.service.SysDateService;
+import com.lanxige.utils.TimeAgoUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -377,5 +381,32 @@ public class SysDateServiceImpl implements SysDateService {
 
             return updatedRows > 0;
         }
+    }
+
+    /**
+     * 查询站内热门视频
+     *
+     * @return 热门视频
+     */
+    @Override
+    public List<HotMovieRsp> getHotMovie() {
+        return videoStatMapper.selectHotMovie();
+    }
+
+    /**
+     * 查询站最新评论
+     *
+     * @return 最新评论
+     */
+    @Override
+    public List<NewCommentRsp> getNewComment() {
+        List<NewCommentRsp> list = videoCommentMapper.selectNewComment();
+
+        for (NewCommentRsp rsp : list) {
+            LocalDateTime createTime = rsp.getCreateTime();
+            rsp.setTime(TimeAgoUtil.format(createTime));
+        }
+
+        return list;
     }
 }

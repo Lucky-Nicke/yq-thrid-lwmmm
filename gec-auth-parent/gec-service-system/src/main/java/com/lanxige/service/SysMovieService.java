@@ -39,5 +39,13 @@ public interface SysMovieService extends IService<SysMovie> {
      * @return 删除结果
      */
     boolean deleteMovieBatch(List<Long> id);
+
+    /**
+     * 修改电影信息
+     *
+     * @param sysMovie 电影信息
+     * @return 修改结果
+     */
+    boolean updateMovieInfo(SysMovie sysMovie);
 }
 

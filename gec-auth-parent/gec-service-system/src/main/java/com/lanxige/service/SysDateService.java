@@ -1,7 +1,11 @@
 package com.lanxige.service;
 
 import com.lanxige.Rsp.DataTrendRsp;
+import com.lanxige.Rsp.HotMovieRsp;
+import com.lanxige.Rsp.NewCommentRsp;
 import com.lanxige.Rsp.VideoDetailRsp;
+
+import java.util.List;
 
 public interface SysDateService {
     /**
@@ -34,6 +38,7 @@ public interface SysDateService {
 
     /**
      * 查询视频详情
+     *
      * @param id
      * @return
      */
@@ -54,4 +59,18 @@ public interface SysDateService {
      * @return 删除结果
      */
     boolean removeComment(String commentId);
+
+    /**
+     * 查询站内热门视频
+     *
+     * @return 热门视频
+     */
+    List<HotMovieRsp> getHotMovie();
+
+    /**
+     * 查询站最新评论
+     *
+     * @return 最新评论
+     */
+    List<NewCommentRsp> getNewComment();
 }

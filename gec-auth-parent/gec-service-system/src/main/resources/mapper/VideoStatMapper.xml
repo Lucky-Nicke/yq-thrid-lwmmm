@@ -22,4 +22,17 @@
         FROM video_stat;
     </select>
 
+    <!--  查询热门电影  -->
+    <select id="selectHotMovie" resultType="com.lanxige.Rsp.HotMovieRsp">
+        SELECT m.name       AS name,
+               m.cid        AS category,
+               s.play_count AS views
+        FROM video_stat s
+                 LEFT JOIN sys_movie m
+                           ON m.id = s.video_id
+        WHERE s.is_deleted = 0
+          AND m.is_deleted = 0
+        ORDER BY s.play_count DESC LIMIT 5
+    </select>
+
 </mapper>

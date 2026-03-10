@@ -84,7 +84,7 @@ public class SysMovieController {
             requestMethod = "Post")
     @PostMapping("/updateMovie")
     public Result updateRole(@RequestBody SysMovie sysMovie) {
-        boolean b = this.sysMovieService.updateById(sysMovie);
+        boolean b = this.sysMovieService.updateMovieInfo(sysMovie);
         if (b) {
             return Result.ok();
         } else {

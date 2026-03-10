@@ -71,4 +71,16 @@ public class SysDataController {
             return Result.fail("删除失败");
         }
     }
+
+    @ApiOperation("查询站内热门视频")
+    @GetMapping("/getHotMovie")
+    public Result getHotMovie() {
+        return Result.ok(sysDateService.getHotMovie());
+    }
+
+    @ApiOperation("查询站最新评论")
+    @GetMapping("/getNewComment")
+    public Result getNewComment() {
+        return Result.ok(sysDateService.getNewComment());
+    }
 }

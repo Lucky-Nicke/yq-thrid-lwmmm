@@ -2,8 +2,10 @@ package com.lanxige.service.impl;
 
 import com.aliyuncs.vod.model.v20170321.GetVideoPlayAuthRequest;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.lanxige.Rsp.AllVideoInfoRsp;
 import com.lanxige.mapper.system.SysMovieMapper;
 import com.lanxige.mapper.video.VideoCommentMapper;
 import com.lanxige.mapper.video.VideoDanmuMapper;
@@ -21,6 +23,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -36,6 +39,9 @@ public class SysMovieServiceImpl extends ServiceImpl<SysMovieMapper, SysMovie> i
 
     @Autowired
     private VideoCommentMapper videoCommentMapper;
+
+    @Autowired
+    private SysMovieMapper sysMovieMapper;
 
     @Override
     public IPage<SysMovie> selectPage(IPage<SysMovie> p1, SysMovieQueryVo sysMovieQueryVo) {
@@ -159,5 +165,42 @@ public class SysMovieServiceImpl extends ServiceImpl<SysMovieMapper, SysMovie> i
         log.info("修改视频成功{}", b);
 
         return b;
+    }
+
+    @Override
+    public List<AllVideoInfoRsp> getAllVideoInfo() {
+
+        QueryWrapper<SysMovie> wrapper = new QueryWrapper<>();
+        wrapper.eq("is_deleted", 0)
+                .eq("is_approval", "1")
+                .orderByDesc("create_time");
+
+        List<SysMovie> movieList = sysMovieMapper.selectList(wrapper);
+
+        return movieList.stream().map(movie -> {
+
+            AllVideoInfoRsp rsp = new AllVideoInfoRsp();
+            rsp.setId(movie.getId());
+            rsp.setTitle(movie.getName());
+            rsp.setAuthor(movie.getDirector());
+            rsp.setCoverUrl(movie.getImage());
+            rsp.setCategory(movie.getCid());
+
+            // 目前没有播放量字段，先默认0
+            rsp.setViews("0");
+
+            return rsp;
+
+        }).collect(Collectors.toList());
+    }
+
+    @Override
+    public List<AllVideoInfoRsp> getHotVideoInfo() {
+        return sysMovieMapper.selectHotVideos();
+    }
+
+    @Override
+    public List<AllVideoInfoRsp> getHotWatchVideoInfo() {
+        return sysMovieMapper.selectHotWatchVideos();
     }
 }

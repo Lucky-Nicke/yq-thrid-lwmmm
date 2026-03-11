@@ -143,5 +143,21 @@ public class SysUserController {
         Map<String, Object> map = sysUserService.getUserLessInfo(username);
         return Result.ok(map);
     }
+
+    // 添加用户
+    @OpenLog(title = "用户管理-注册",
+            businessType = BusinessType.INSERT,
+            requestMethod = "Post")
+    @ApiOperation("注册用户")
+    @PostMapping("/registerUser")
+    public Result registerUser(@Validated @RequestBody SysUser sysUser) {
+        boolean b = sysUserService.registerUser(sysUser);
+
+        if (b) {
+            return Result.ok();
+        } else {
+            return Result.fail();
+        }
+    }
 }
 

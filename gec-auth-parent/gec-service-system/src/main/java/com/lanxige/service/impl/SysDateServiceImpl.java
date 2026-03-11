@@ -21,6 +21,7 @@ import com.lanxige.model.video.VideoStat;
 import com.lanxige.model.vo.DayCountVo;
 import com.lanxige.service.SysDateService;
 import com.lanxige.utils.TimeAgoUtil;
+import com.lanxige.utils.VodTemplate;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -51,6 +52,9 @@ public class SysDateServiceImpl implements SysDateService {
 
     @Autowired
     private VideoCommentMapper videoCommentMapper;
+
+    @Autowired
+    private VodTemplate vodTemplate;
 
     /**
      * 根据用户id查询角色id
@@ -197,16 +201,39 @@ public class SysDateServiceImpl implements SysDateService {
 
         // 1 查询视频基本信息
         SysMovie movie = sysMovieMapper.selectById(videoId);
-
         if (movie == null) {
             return rsp;
         }
+
+        String director = movie.getDirector();
+        QueryWrapper queryWrapper = new QueryWrapper();
+        queryWrapper.eq("username",director);
+        SysUser sysCreateUser = sysUserMapper.selectOne(queryWrapper);
 
         rsp.setVideoId(movie.getId());
         rsp.setName(movie.getName());
         rsp.setImage(movie.getImage());
         rsp.setCategory(movie.getCid());
         rsp.setPublishTime(movie.getCreateTime());
+
+        // 调用阿里云服务获取播放秘钥
+        String playAuth;
+        try {
+            playAuth = this.vodTemplate.getVideoPlayAuth(movie.getPlayId()).getPlayAuth();
+        } catch (Exception e) {
+            log.error("获取播放秘钥失败，异常信息：{}", e.getMessage());
+            throw new RuntimeException(e);
+        }
+
+        // 封装map 集合
+        HashMap<String, Object> map = new HashMap<>();
+        // 分别封装三个参数  参数的key 要和前端对应
+        map.put("image", movie.getImage());
+        map.put("playId", movie.getPlayId());
+        map.put("playAuth", playAuth);
+        log.info("获取播放秘钥成功，结果：{}", map);
+
+        rsp.setPlayId(map);
 
         // 2 查询统计数据
         QueryWrapper<VideoStat> statWrapper = new QueryWrapper<>();
@@ -309,6 +336,8 @@ public class SysDateServiceImpl implements SysDateService {
 
         rsp.setCommentList(rootComments);
         rsp.setCommentCount(allComments.size());
+        rsp.setCreator(director);
+        rsp.setCreatorAvatar(sysCreateUser.getHeadUrl());
 
         return rsp;
     }

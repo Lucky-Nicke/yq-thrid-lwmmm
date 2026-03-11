@@ -5,8 +5,12 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.StringUtils;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.lanxige.Req.ChangePwdReq;
+import com.lanxige.mapper.system.SysRoleMapper;
 import com.lanxige.mapper.system.SysUserMapper;
+import com.lanxige.mapper.system.SysUserRoleMapper;
+import com.lanxige.model.system.SysRole;
 import com.lanxige.model.system.SysUser;
+import com.lanxige.model.system.SysUserRole;
 import com.lanxige.model.vo.RouterVo;
 import com.lanxige.model.vo.SysUserQueryVo;
 import com.lanxige.service.SysMenuService;
@@ -14,7 +18,10 @@ import com.lanxige.service.SysUserService;
 import com.lanxige.util.MD5Helper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DuplicateKeyException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.HashMap;
 import java.util.List;
@@ -27,6 +34,15 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
     private SysUserMapper sysUserMapper;
 
     private final SysMenuService iSysMenuService;
+
+    @Autowired
+    private SysRoleMapper sysRoleMapper;
+
+    @Autowired
+    private SysUserRoleMapper sysUserRoleMapper;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     public SysUserServiceImpl(SysMenuService SysMenuService) {
         this.iSysMenuService = SysMenuService;
@@ -211,5 +227,60 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
         map.put("id", sysUser.getId());
 
         return map;
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public boolean registerUser(SysUser sysUser) {
+
+        // 1 校验用户名是否存在
+        QueryWrapper<SysUser> wrapper = new QueryWrapper<>();
+        wrapper.eq("username", sysUser.getUsername())
+                .eq("is_deleted", 0);
+
+        Integer count = sysUserMapper.selectCount(wrapper);
+
+        if (count > 0) {
+            throw new RuntimeException("用户名已存在");
+        }
+
+        // 2 设置用户默认信息
+        sysUser.setStatus(1);
+
+        // 3 密码加密
+        sysUser.setPassword(passwordEncoder.encode(sysUser.getPassword()));
+        sysUser.setHeadUrl("http://file.lanxige.club/img/yq-third-lwmmm/Default/identicon.png");
+
+        // 4 保存用户
+        int insert;
+        try {
+            insert = sysUserMapper.insert(sysUser);
+        } catch (DuplicateKeyException e) {
+            throw new RuntimeException("用户名已存在");
+        }
+
+        if (insert <= 0) {
+            throw new RuntimeException("注册失败");
+        }
+
+        // 5 查询 USER 角色
+        QueryWrapper<SysRole> roleWrapper = new QueryWrapper<>();
+        roleWrapper.eq("role_code", "USER")
+                .eq("is_deleted", 0);
+
+        SysRole role = sysRoleMapper.selectOne(roleWrapper);
+
+        if (role == null) {
+            throw new RuntimeException("默认角色USER不存在");
+        }
+
+        // 6 建立用户角色关系
+        SysUserRole userRole = new SysUserRole();
+        userRole.setUserId(sysUser.getId());
+        userRole.setRoleId(role.getId());
+
+        sysUserRoleMapper.insert(userRole);
+
+        return true;
     }
 }

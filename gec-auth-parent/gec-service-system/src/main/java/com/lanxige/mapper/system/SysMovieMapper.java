@@ -2,6 +2,7 @@ package com.lanxige.mapper.system;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.lanxige.Rsp.AllVideoInfoRsp;
 import com.lanxige.model.system.SysMovie;
 import com.lanxige.model.vo.DayCountVo;
 import com.lanxige.model.vo.SysMovieQueryVo;
@@ -23,4 +24,8 @@ public interface SysMovieMapper extends BaseMapper<SysMovie> {
      * 查询电影总数
      */
     Integer selectTotalMovieCount();
+
+    List<AllVideoInfoRsp> selectHotVideos();
+
+    List<AllVideoInfoRsp> selectHotWatchVideos();
 }

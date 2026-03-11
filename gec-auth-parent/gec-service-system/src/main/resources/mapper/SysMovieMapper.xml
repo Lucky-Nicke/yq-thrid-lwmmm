@@ -47,4 +47,33 @@
         WHERE is_deleted = 0;
     </select>
 
+    <select id="selectHotVideos" resultType="com.lanxige.Rsp.AllVideoInfoRsp">
+        SELECT m.id,
+               m.name       AS title,
+               m.director   AS author,
+               s.play_count AS views,
+               m.image      AS coverUrl,
+               m.cid        AS category
+        FROM sys_movie m
+                 LEFT JOIN video_stat s ON m.id = s.video_id
+        WHERE m.is_deleted = 0
+          AND m.is_approval = '1'
+        ORDER BY s.like_count DESC LIMIT 5
+    </select>
+
+    <select id="selectHotWatchVideos" resultType="com.lanxige.Rsp.AllVideoInfoRsp">
+        SELECT
+            m.id,
+            m.name AS title,
+            m.director AS author,
+            s.visit_pv AS views,
+            m.image AS coverUrl,
+            m.cid AS category
+        FROM sys_movie m
+                 LEFT JOIN video_stat s ON m.id = s.video_id
+        WHERE m.is_deleted = 0
+          AND m.is_approval = '1'
+        ORDER BY s.visit_pv DESC
+            LIMIT 10
+    </select>
 </mapper>

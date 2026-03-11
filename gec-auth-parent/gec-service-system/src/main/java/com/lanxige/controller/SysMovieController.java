@@ -2,6 +2,7 @@ package com.lanxige.controller;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.lanxige.Rsp.AllVideoInfoRsp;
 import com.lanxige.eurm.BusinessType;
 import com.lanxige.model.system.SysMovie;
 import com.lanxige.model.vo.SysMovieQueryVo;
@@ -115,5 +116,29 @@ public class SysMovieController {
     public Result playVideoByAuth(@PathVariable Long id) {
         HashMap<String, Object> map = sysMovieService.getMovieId(id);
         return Result.ok(map);
+    }
+
+    // 返回全部视频信息
+    @ApiOperation("返回全部视频信息")
+    @PostMapping(value = "/getAllVideoInfo")
+    public Result getAllVideoInfo() {
+        List<AllVideoInfoRsp> rsp = sysMovieService.getAllVideoInfo();
+        return Result.ok(rsp);
+    }
+
+    // 返回推荐视频信息
+    @ApiOperation("返回推荐视频信息")
+    @PostMapping(value = "/getHotVideoInfo")
+    public Result getHotVideoInfo() {
+        List<AllVideoInfoRsp> rsp = sysMovieService.getHotVideoInfo();
+        return Result.ok(rsp);
+    }
+
+    // 返回排行榜视频信息
+    @ApiOperation("返回排行榜视频信息")
+    @PostMapping(value = "/getHotWatchVideoInfo")
+    public Result getHotWatchVideoInfo() {
+        List<AllVideoInfoRsp> rsp = sysMovieService.getHotWatchVideoInfo();
+        return Result.ok(rsp);
     }
 }

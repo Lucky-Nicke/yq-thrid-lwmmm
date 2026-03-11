@@ -66,4 +66,6 @@ public interface SysUserService extends IService<SysUser> {
      * @return 用户信息
      */
     Map<String, Object> getUserLessInfo(String username);
+
+    boolean registerUser(SysUser sysUser);
 }

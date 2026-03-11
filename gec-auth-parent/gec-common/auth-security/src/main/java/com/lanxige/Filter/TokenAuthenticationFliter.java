@@ -37,6 +37,10 @@ public class TokenAuthenticationFliter extends OncePerRequestFilter {
                 || "/admin/system/upload/uploadVideo".equals(request.getRequestURI())
                 || "/admin/system/sysCategory/findAll".equals(request.getRequestURI())
                 || "/admin/system/index/changePwd".equals(request.getRequestURI())
+                || "/admin/system/sysMovie/getAllVideoInfo".equals(request.getRequestURI())
+                || "/admin/system/sysMovie/getHotWatchVideoInfo".equals(request.getRequestURI())
+                || "/admin/system/sysMovie/getHotVideoInfo".equals(request.getRequestURI())
+                || "/admin/system/sysDate/singelMovieDetail".equals(request.getRequestURI())
         ) {
             filterChain.doFilter(request, response);
             return;

@@ -5,6 +5,7 @@ import com.lanxige.Dto.VideoDanmakuDTO;
 import lombok.Data;
 
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -57,6 +58,21 @@ public class VideoDetailRsp {
      * 总评论数
      */
     private Integer commentCount;
+
+    /**
+     * 创建人名称
+     */
+    private String creator;
+
+    /**
+     * 创建人头像
+     */
+    private String creatorAvatar;
+
+    /**
+     * 播放id
+     */
+    private HashMap<String, Object> playId;
 
     /**
      * 弹幕列表

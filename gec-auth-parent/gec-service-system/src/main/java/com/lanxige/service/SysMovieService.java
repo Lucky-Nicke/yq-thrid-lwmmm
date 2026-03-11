@@ -2,6 +2,7 @@ package com.lanxige.service;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.lanxige.Rsp.AllVideoInfoRsp;
 import com.lanxige.model.system.SysMovie;
 import com.lanxige.model.vo.SysMovieQueryVo;
 
@@ -47,5 +48,11 @@ public interface SysMovieService extends IService<SysMovie> {
      * @return 修改结果
      */
     boolean updateMovieInfo(SysMovie sysMovie);
+
+    List<AllVideoInfoRsp> getAllVideoInfo();
+
+    List<AllVideoInfoRsp> getHotVideoInfo();
+
+    List<AllVideoInfoRsp> getHotWatchVideoInfo();
 }
 

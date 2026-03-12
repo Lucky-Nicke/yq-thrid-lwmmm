@@ -5,9 +5,12 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.StringUtils;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.lanxige.Req.ChangePwdReq;
+import com.lanxige.Req.UserInfoRsp;
 import com.lanxige.mapper.system.SysRoleMapper;
 import com.lanxige.mapper.system.SysUserMapper;
 import com.lanxige.mapper.system.SysUserRoleMapper;
+import com.lanxige.mapper.video.VideoLikeLogMapper;
+import com.lanxige.mapper.video.VideoWatchLogMapper;
 import com.lanxige.model.system.SysRole;
 import com.lanxige.model.system.SysUser;
 import com.lanxige.model.system.SysUserRole;
@@ -44,6 +47,12 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
 
     @Autowired
     private PasswordEncoder passwordEncoder;
+
+    @Autowired
+    private VideoWatchLogMapper videoWatchLogMapper;
+
+    @Autowired
+    private VideoLikeLogMapper videoLikeLogMapper;
 
     public SysUserServiceImpl(SysMenuService SysMenuService) {
         this.iSysMenuService = SysMenuService;
@@ -284,5 +293,15 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
         sysUserRoleMapper.insert(userRole);
 
         return true;
+    }
+
+    @Override
+    public List<UserInfoRsp> userWatchLog(String id) {
+        return videoWatchLogMapper.getUserWatchLog(Long.valueOf(id));
+    }
+
+    @Override
+    public List<UserInfoRsp> userLikeLog(String id) {
+        return videoLikeLogMapper.getUserLikeLog(Long.valueOf(id));
     }
 }

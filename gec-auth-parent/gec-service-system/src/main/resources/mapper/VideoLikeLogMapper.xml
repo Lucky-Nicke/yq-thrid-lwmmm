@@ -15,4 +15,20 @@
         <result column="is_deleted" property="isDeleted"/>
     </resultMap>
 
+    <select id="getUserLikeLog" resultType="com.lanxige.Req.UserInfoRsp">
+        SELECT
+            m.id,
+            m.name AS title,
+            m.image AS cover,
+            l.create_time AS time
+        FROM video_like_log l
+            LEFT JOIN sys_movie m ON l.video_id = m.id
+        WHERE l.user_id = #{userId}
+          AND l.type = 'video'
+          AND l.status = 1
+          AND l.is_deleted = 0
+          AND m.is_deleted = 0
+        ORDER BY l.create_time DESC
+    </select>
+
 </mapper>

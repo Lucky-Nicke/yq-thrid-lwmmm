@@ -3,6 +3,7 @@ package com.lanxige.controller;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.lanxige.Req.UserInfoRsp;
 import com.lanxige.eurm.BusinessType;
 import com.lanxige.model.system.SysUser;
 import com.lanxige.model.vo.SysUserQueryVo;
@@ -158,6 +159,24 @@ public class SysUserController {
         } else {
             return Result.fail();
         }
+    }
+
+    @ApiOperation("查询用户观看记录")
+    @GetMapping(value = "/userWatchLog")
+    public Result userWatchLog(HttpServletRequest request) {
+        String token = request.getHeader("token");
+        String id = JwtHelper.getId(token);
+        List<UserInfoRsp> list = sysUserService.userWatchLog(id);
+        return Result.ok(list);
+    }
+
+    @ApiOperation("查询用户点赞列表")
+    @GetMapping(value = "/userLikeLog")
+    public Result userLikeLog(HttpServletRequest request) {
+        String token = request.getHeader("token");
+        String id = JwtHelper.getId(token);
+        List<UserInfoRsp> list = sysUserService.userLikeLog(id);
+        return Result.ok(list);
     }
 }
 

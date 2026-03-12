@@ -3,9 +3,11 @@ package com.lanxige.service;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.lanxige.Req.ChangePwdReq;
+import com.lanxige.Req.UserInfoRsp;
 import com.lanxige.model.system.SysUser;
 import com.lanxige.model.vo.SysUserQueryVo;
 
+import java.util.List;
 import java.util.Map;
 
 public interface SysUserService extends IService<SysUser> {
@@ -68,4 +70,8 @@ public interface SysUserService extends IService<SysUser> {
     Map<String, Object> getUserLessInfo(String username);
 
     boolean registerUser(SysUser sysUser);
+
+    List<UserInfoRsp> userWatchLog(String id);
+
+    List<UserInfoRsp> userLikeLog(String id);
 }

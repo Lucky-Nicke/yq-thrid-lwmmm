@@ -14,4 +14,18 @@
         <result column="is_deleted" property="isDeleted"/>
     </resultMap>
 
+    <select id="getUserWatchLog" resultType="com.lanxige.Req.UserInfoRsp">
+        SELECT
+            m.id,
+            m.name AS title,
+            m.image AS cover,
+            w.create_time AS time
+        FROM video_watch_log w
+            LEFT JOIN sys_movie m ON w.video_id = m.id
+        WHERE w.user_id = #{userId}
+          AND w.is_deleted = 0
+          AND m.is_deleted = 0
+        ORDER BY w.create_time DESC
+    </select>
+
 </mapper>

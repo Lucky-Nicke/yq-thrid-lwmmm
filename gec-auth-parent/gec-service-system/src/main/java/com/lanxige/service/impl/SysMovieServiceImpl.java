@@ -6,23 +6,14 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.lanxige.Dto.VideoCommentDTO;
 import com.lanxige.Req.SendCommentReq;
 import com.lanxige.Req.SendDanMuReq;
 import com.lanxige.Req.SendLikeReq;
 import com.lanxige.Rsp.AllVideoInfoRsp;
 import com.lanxige.mapper.system.SysMovieMapper;
-import com.lanxige.mapper.system.SysUserMapper;
-import com.lanxige.mapper.video.VideoCommentMapper;
-import com.lanxige.mapper.video.VideoDanmuMapper;
-import com.lanxige.mapper.video.VideoLikeLogMapper;
-import com.lanxige.mapper.video.VideoStatMapper;
+import com.lanxige.mapper.video.*;
 import com.lanxige.model.system.SysMovie;
-import com.lanxige.model.system.SysUser;
-import com.lanxige.model.video.VideoComment;
-import com.lanxige.model.video.VideoDanmaku;
-import com.lanxige.model.video.VideoLikeLog;
-import com.lanxige.model.video.VideoStat;
+import com.lanxige.model.video.*;
 import com.lanxige.model.vo.SysMovieQueryVo;
 import com.lanxige.service.SysMovieService;
 import com.lanxige.utils.VodTemplate;
@@ -31,10 +22,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -59,7 +48,7 @@ public class SysMovieServiceImpl extends ServiceImpl<SysMovieMapper, SysMovie> i
     private VideoLikeLogMapper videoLikeLogMapper;
 
     @Autowired
-    private SysUserMapper sysUserMapper;
+    private VideoWatchLogMapper videoWatchLogMapper;
 
     @Override
     public IPage<SysMovie> selectPage(IPage<SysMovie> p1, SysMovieQueryVo sysMovieQueryVo) {
@@ -205,7 +194,9 @@ public class SysMovieServiceImpl extends ServiceImpl<SysMovieMapper, SysMovie> i
             rsp.setCategory(movie.getCid());
 
             // 目前没有播放量字段，先默认0
-            rsp.setViews("0");
+            VideoStat videoStat = videoStatMapper.selectOne(
+                    new QueryWrapper<VideoStat>().eq("video_id", movie.getId()));
+            rsp.setViews(videoStat.getPlayCount());
 
             return rsp;
 
@@ -396,96 +387,25 @@ public class SysMovieServiceImpl extends ServiceImpl<SysMovieMapper, SysMovie> i
         return 1;
     }
 
-    /**
-     * 获取视频评论
-     *
-     * @param videoId 视频ID
-     * @return 评论列表
-     */
     @Override
-    public List<VideoCommentDTO> getVideoComment(Long videoId) {
+    @Transactional
+    public void recordVideoPV(Long videoId, Long userId) {
 
-        // 1 查询该视频所有评论
-        List<VideoComment> comments = videoCommentMapper.selectList(
-                new LambdaQueryWrapper<VideoComment>()
-                        .eq(VideoComment::getVideoId, videoId)
-                        .eq(VideoComment::getStatus, 1)
-                        .eq(VideoComment::getIsDeleted, 0)
-                        .orderByDesc(VideoComment::getCreateTime)
+        // 1. 播放量 +1
+        videoStatMapper.update(
+                null,
+                new LambdaUpdateWrapper<VideoStat>()
+                        .eq(VideoStat::getId, videoId)
+                        .setSql("play_count = play_count + 1")
         );
 
-        if (comments.isEmpty()) {
-            return Collections.emptyList();
+        // 2. 如果用户登录，记录观看日志
+        if (userId != null) {
+            VideoWatchLog log = new VideoWatchLog();
+            log.setUserId(userId);
+            log.setVideoId(videoId);
+            videoWatchLogMapper.insert(log);
         }
-
-        // 2 转DTO
-        List<VideoCommentDTO> dtoList = comments.stream()
-                .map(this::convertDTO)
-                .collect(Collectors.toList());
-
-        // 3 按 parentId 分组
-        Map<Long, List<VideoCommentDTO>> map = dtoList.stream()
-                .filter(c -> c.getParentId() != null)
-                .collect(Collectors.groupingBy(VideoCommentDTO::getParentId));
-
-        // 4 组装评论树
-        List<VideoCommentDTO> rootList = dtoList.stream()
-                .filter(c -> c.getParentId() == null)
-                .collect(Collectors.toList());
-
-        for (VideoCommentDTO root : rootList) {
-            buildChildren(root, map);
-        }
-
-        return rootList;
-    }
-
-    /**
-     * 构建评论树
-     *
-     * @param parent 父节点
-     * @param map    子节点
-     */
-    private void buildChildren(VideoCommentDTO parent,
-                               Map<Long, List<VideoCommentDTO>> map) {
-
-        List<VideoCommentDTO> children = map.get(parent.getId());
-
-        if (children == null) {
-            return;
-        }
-
-        parent.setChildren(children);
-
-        for (VideoCommentDTO child : children) {
-            buildChildren(child, map);
-        }
-    }
-
-    /**
-     * 转化DTO
-     *
-     * @param comment 评论
-     * @return 点赞结果
-     */
-    private VideoCommentDTO convertDTO(VideoComment comment) {
-
-        VideoCommentDTO dto = new VideoCommentDTO();
-
-        dto.setId(comment.getId());
-        dto.setParentId(comment.getParentId());
-        dto.setRootId(comment.getRootId());
-        dto.setContent(comment.getContent());
-        dto.setLikeCount(comment.getLikeCount());
-        dto.setReplyCount(comment.getReplyCount());
-
-        dto.setCreateTime(comment.getCreateTime());
-
-        SysUser sysUser = sysUserMapper.selectById(comment.getUserId());
-        dto.setUserId(comment.getUserId().toString());
-        dto.setAvatar(sysUser.getHeadUrl());
-
-        return dto;
     }
 }
 

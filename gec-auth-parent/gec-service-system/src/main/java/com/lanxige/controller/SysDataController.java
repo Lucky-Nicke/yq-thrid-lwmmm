@@ -42,7 +42,7 @@ public class SysDataController {
 
     @ApiOperation("查询视频详情")
     @GetMapping("/singelMovieDetail")
-    public Result getMovieListInfo(@RequestParam String id) {
+    public Result getMovieListInfo(@RequestParam Long id) {
         VideoDetailRsp rsp = sysDateService.getSingelMovieDetail(id);
 
         return Result.ok(rsp);

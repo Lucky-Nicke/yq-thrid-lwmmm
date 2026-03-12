@@ -2,6 +2,7 @@ package com.lanxige.controller;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.lanxige.Req.RecordVideoPVReq;
 import com.lanxige.Req.SendCommentReq;
 import com.lanxige.Req.SendDanMuReq;
 import com.lanxige.Req.SendLikeReq;
@@ -189,9 +190,11 @@ public class SysMovieController {
         }
     }
 
-    @ApiOperation("查询站视频评论")
-    @PostMapping("/getVideoComment/{id}")
-    public Result getVideoComment(@PathVariable Long id) {
-        return Result.ok(sysMovieService.getVideoComment(id));
+    @ApiOperation("记录播放量")
+    @PostMapping("/recordVideoPV")
+    public Result recordVideoPV(@RequestBody RecordVideoPVReq req) {
+        sysMovieService.recordVideoPV(req.getVideoId(), req.getUserId());
+
+        return Result.ok();
     }
 }

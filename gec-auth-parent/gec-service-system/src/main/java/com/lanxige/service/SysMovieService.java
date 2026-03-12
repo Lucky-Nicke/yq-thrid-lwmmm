@@ -2,7 +2,6 @@ package com.lanxige.service;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.lanxige.Dto.VideoCommentDTO;
 import com.lanxige.Req.SendCommentReq;
 import com.lanxige.Req.SendDanMuReq;
 import com.lanxige.Req.SendLikeReq;
@@ -83,9 +82,12 @@ public interface SysMovieService extends IService<SysMovie> {
      */
     int sendComment(SendCommentReq req);
 
-    /*
-     *获取评论
+    /**
+     * 记录视频播放量
+     *
+     * @param id     视频id
+     * @param userId 用户id
      */
-    List<VideoCommentDTO> getVideoComment(Long id);
+    void recordVideoPV(Long id, Long userId);
 }
 

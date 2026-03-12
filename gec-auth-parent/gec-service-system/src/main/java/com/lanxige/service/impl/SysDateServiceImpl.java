@@ -1,6 +1,7 @@
 package com.lanxige.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.lanxige.Dto.VideoCommentDTO;
 import com.lanxige.Dto.VideoDanmakuDTO;
@@ -196,8 +197,16 @@ public class SysDateServiceImpl implements SysDateService {
      * @return 视频详情
      */
     @Override
-    public VideoDetailRsp getSingelMovieDetail(String videoId) {
+    public VideoDetailRsp getSingelMovieDetail(Long videoId) {
         VideoDetailRsp rsp = new VideoDetailRsp();
+
+        // 更新视频播放量
+        videoStatMapper.update(
+                null,
+                new LambdaUpdateWrapper<VideoStat>()
+                        .eq(VideoStat::getId, videoId)
+                        .setSql("visit_pv = visit_pv + 1")
+        );
 
         // 1 查询视频基本信息
         SysMovie movie = sysMovieMapper.selectById(videoId);

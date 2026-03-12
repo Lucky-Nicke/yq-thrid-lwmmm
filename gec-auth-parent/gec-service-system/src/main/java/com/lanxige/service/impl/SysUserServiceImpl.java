@@ -26,6 +26,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 @Slf4j
 @Service
@@ -246,6 +247,7 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
 
         // 2 设置用户默认信息
         sysUser.setStatus(1);
+        sysUser.setName("用户"+UUID.randomUUID().toString().substring(0, 6));
 
         // 3 密码加密
         sysUser.setPassword(passwordEncoder.encode(sysUser.getPassword()));

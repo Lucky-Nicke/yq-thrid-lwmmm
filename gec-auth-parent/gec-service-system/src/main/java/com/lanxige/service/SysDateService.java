@@ -42,7 +42,7 @@ public interface SysDateService {
      * @param id
      * @return
      */
-    VideoDetailRsp getSingelMovieDetail(String id);
+    VideoDetailRsp getSingelMovieDetail(Long id);
 
     /**
      * 删除弹幕

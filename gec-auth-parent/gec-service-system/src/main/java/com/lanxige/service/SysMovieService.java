@@ -2,6 +2,10 @@ package com.lanxige.service;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.lanxige.Dto.VideoCommentDTO;
+import com.lanxige.Req.SendCommentReq;
+import com.lanxige.Req.SendDanMuReq;
+import com.lanxige.Req.SendLikeReq;
 import com.lanxige.Rsp.AllVideoInfoRsp;
 import com.lanxige.model.system.SysMovie;
 import com.lanxige.model.vo.SysMovieQueryVo;
@@ -49,10 +53,39 @@ public interface SysMovieService extends IService<SysMovie> {
      */
     boolean updateMovieInfo(SysMovie sysMovie);
 
+    /*
+     * 获取所有电影信息
+     */
     List<AllVideoInfoRsp> getAllVideoInfo();
 
+    /*
+     * 获取热门电影信息
+     */
     List<AllVideoInfoRsp> getHotVideoInfo();
 
+    /*
+     * 获取热门观看电影信息
+     */
     List<AllVideoInfoRsp> getHotWatchVideoInfo();
+
+    /*
+     *发送弹幕
+     */
+    int sendDanMu(SendDanMuReq req);
+
+    /*
+     *发送点赞
+     */
+    String sendLike(SendLikeReq req);
+
+    /*
+     *发送评论
+     */
+    int sendComment(SendCommentReq req);
+
+    /*
+     *获取评论
+     */
+    List<VideoCommentDTO> getVideoComment(Long id);
 }
 

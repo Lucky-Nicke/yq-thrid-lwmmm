@@ -2,6 +2,9 @@ package com.lanxige.controller;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.lanxige.Req.SendCommentReq;
+import com.lanxige.Req.SendDanMuReq;
+import com.lanxige.Req.SendLikeReq;
 import com.lanxige.Rsp.AllVideoInfoRsp;
 import com.lanxige.eurm.BusinessType;
 import com.lanxige.model.system.SysMovie;
@@ -12,6 +15,7 @@ import com.lanxige.utils.aop.OpenLog;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
@@ -140,5 +144,54 @@ public class SysMovieController {
     public Result getHotWatchVideoInfo() {
         List<AllVideoInfoRsp> rsp = sysMovieService.getHotWatchVideoInfo();
         return Result.ok(rsp);
+    }
+
+    // 发送弹幕
+    @ApiOperation("发送弹幕")
+    @PostMapping(value = "/sendDanMu")
+    public Result sendDanMu(@Validated @RequestBody SendDanMuReq req) {
+        int b = sysMovieService.sendDanMu(req);
+
+        if (b > 0) {
+            return Result.ok();
+        } else {
+            return Result.fail();
+        }
+    }
+
+    // 点赞
+    @ApiOperation("点赞")
+    @PostMapping(value = "/sendLike")
+    public Result sendLike(@Validated @RequestBody SendLikeReq req) {
+        String b = sysMovieService.sendLike(req);
+
+        if ("点赞成功".equals(b)) {
+            return Result.ok(b);
+        } else if ("已经点过赞了".equals(b)) {
+            return Result.ok(b);
+        } else if ("取消点赞成功".equals(b)) {
+            return Result.ok(b);
+        } else {
+            return Result.fail(b);
+        }
+    }
+
+    // 发送评论
+    @ApiOperation("发送评论")
+    @PostMapping(value = "/sendComment")
+    public Result sendComment(@Validated @RequestBody SendCommentReq req) {
+        int b = sysMovieService.sendComment(req);
+
+        if (b > 0) {
+            return Result.ok();
+        } else {
+            return Result.fail();
+        }
+    }
+
+    @ApiOperation("查询站视频评论")
+    @PostMapping("/getVideoComment/{id}")
+    public Result getVideoComment(@PathVariable Long id) {
+        return Result.ok(sysMovieService.getVideoComment(id));
     }
 }

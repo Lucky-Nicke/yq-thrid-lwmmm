@@ -22,7 +22,7 @@ public class VideoDanmakuDTO extends BaseEntity {
     /**
      * 出现时间(秒)
      */
-    private Integer playTime;
+    private Double playTime;
 
     /**
      * 颜色

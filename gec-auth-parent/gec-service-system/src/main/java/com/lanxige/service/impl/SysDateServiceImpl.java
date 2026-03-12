@@ -277,7 +277,7 @@ public class SysDateServiceImpl implements SysDateService {
         QueryWrapper<VideoComment> commentWrapper = new QueryWrapper<>();
         commentWrapper.eq("video_id", videoId)
                 .eq("status", 1)
-                .orderByAsc("create_time");
+                .orderByDesc("create_time");
 
         List<VideoComment> commentList = videoCommentMapper.selectList(commentWrapper);
 

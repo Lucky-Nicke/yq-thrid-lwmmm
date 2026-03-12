@@ -1,5 +1,7 @@
 package com.lanxige.model.video;
 
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableId;
 import lombok.Data;
 
 import java.io.Serializable;
@@ -16,12 +18,13 @@ public class VideoComment implements Serializable {
     /**
      * 评论ID
      */
+    @TableId(type = IdType.AUTO)
     private Long id;
 
     /**
      * 视频ID
      */
-    private String videoId;
+    private Long videoId;
 
     /**
      * 评论用户ID

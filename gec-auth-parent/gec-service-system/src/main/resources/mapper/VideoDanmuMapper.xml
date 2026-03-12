@@ -12,7 +12,7 @@
     <select id="selectDanmakuTrend" resultType="com.lanxige.model.vo.DayCountVo">
         SELECT DATE (create_time) AS day, COUNT(*) AS count
         FROM video_danmaku
-        WHERE status = 1
+        WHERE is_deleted = 0
           AND create_time >= DATE_SUB(CURDATE()
             , INTERVAL 6 DAY)
         GROUP BY DATE (create_time);
@@ -22,7 +22,7 @@
     <select id="selectTotalDanmakuCount" resultType="java.lang.Integer">
         SELECT COUNT(*)
         FROM video_danmaku
-        WHERE status = 1;
+        WHERE is_deleted = 0;
     </select>
 
 </mapper>

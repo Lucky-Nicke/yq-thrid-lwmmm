@@ -39,29 +39,11 @@ public class VideoDanmaku extends BaseEntity {
      * 弹幕出现时间(秒)
      */
     @TableField("play_time")
-    private Integer playTime;
+    private Double playTime;
 
     /**
      * 弹幕颜色
      */
     @TableField("color")
     private String color;
-
-    /**
-     * 弹幕位置(0滚动 1顶部 2底部)
-     */
-    @TableField("position")
-    private Byte position;
-
-    /**
-     * 字体大小
-     */
-    @TableField("font_size")
-    private Byte fontSize;
-
-    /**
-     * 状态(1正常 0屏蔽)
-     */
-    @TableField("status")
-    private Byte status;
 }
